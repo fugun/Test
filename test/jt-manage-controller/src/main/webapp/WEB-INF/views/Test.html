@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>多人在线聊天</title>
+</head>
+<body>
+发送一句吧：<input id="text" type="text">
+<button onclick="send()">发送消息</button>
+<button onclick="closeWebSocket()">退出多人聊天</button>
+<hr>
+<div id="message"></div>
+================================================================
+<script type="text/javascript">
+	var websocket=null
+	if('WebSocket' in window){
+		//websocket=new WebSocket("ws://localhost:8089/jt-manage-controller/user/server");
+		websocket = new WebSocket("ws://localhost:8080/jt-manage-controller/user/json/server");
+	}
+	else{
+		alert('当前浏览器不支持websocket')
+	}
+	
+	//这个websocket不完全相同，打一次代码理解的
+	
+	//连接失败事件
+	websocket.onerror=function(){
+		setMessageInnerHTML("呀！连接聊天室失败！");
+	}
+	
+	//连接成功事件
+	websocket.onopen=function(){
+		setMessageInnerHTML("成功加入聊天室");
+	}
+	
+	
+	//有消息从服务器端发送过来
+	websocket.onmessage=function (event){
+		setMessageInnerHTML(event.data);
+	}
+	
+	//关闭事件
+	websocket.onclose=function(){
+		setMessageInnerHTML('退出聊天室！')
+	}
+	
+	
+	window.onbeforeunload=function(){//关闭窗口时，关闭连接
+		closeWebsocket();
+	}
+	
+	
+	function setMessageInnerHTML(innerHTML){
+		document.getElementById("message").innerHTML+=innerHTML+'<br/>'
+	}
+	
+	function closeWebSocket(){
+		websocket.close();
+	}
+	
+	function send(){
+		var message=document.getElementById('text').value;
+		websocket.send(message);
+	}
+</script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       http://www.springframework.org/schema/tx 
+       http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+       http://www.springframework.org/schema/aop 
+       http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:mybatis/mybatisconfig.xml" />
+		<!-- <property name="mapperLocations" value="classpath*:com/maien/system/manager/*/sqlmapping/map-*.xml" 
+			/> -->
+		<property name="mapperLocations" value="classpath*:mybatis/sqlxml/*.xml" />
+		<property name="failFast" value="true" />
+<!-- 		<property name="typeAliasesPackage" value="com.maien.system.manager" /> -->
+		<!-- <property name="typeAliasesSuperType" value="com.raising.system.modules.base.vo.BasePoJoVo" 
+			/> -->
+		<property name="plugins">
+			<array>
+				<bean id="paginationinterceptor"
+					class="com.maien.system.interceptor.PageInterceptor" />
+			</array>
+		</property>
+	</bean>
+
+	<!-- <property name="lobHandler" ref="lobHandler" /> -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+		<property name="basePackage" value="com.maien.system.manager" />
+		<property name="markerInterface"
+			value="com.raising.system.framework.mybatis.IBaseMapper" />
+		<property name="annotationClass"
+			value="com.raising.system.framework.mybatis.annotation.MyBatisMapper" />
+	</bean>
+
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+		<!-- <constructor-arg index="1" value="SIMPLE" /> -->
+		<!--<constructor-arg index="1" value="BATCH" /> --><!-- 如果想要进行批量操作可加入这个属性 -->
+	</bean>
+
+	<!-- 注解配置事务 -->
+	<!-- <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" 
+		mode="aspectj" /> -->
+	<!-- <tx:annotation-driven /> -->
+	<!-- 定义事务管理 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<!-- 定义事务管理拦截器 -->
+	<!-- <bean id="transactionInterceptor" class="org.springframework.transaction.interceptor.TransactionInterceptor"> 
+		<property name="transactionManager" ref="transactionManager" /> <property 
+		name="transactionAttributes"> <props> <prop key="get*">PROPAGATION_REQUIRED,readOnly</prop> 
+		<prop key="*">PROPAGATION_REQUIRED</prop> </props> </property> </bean> -->
+
+	<!-- 事务代理拦截器的配置 -->
+	<bean id="baseTransactionProxyTemplate" abstract="true"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="insert*">PROPAGATION_REQUIRED</prop>
+				<prop key="add*">PROPAGATION_REQUIRED</prop>
+				<prop key="update*">PROPAGATION_REQUIRED</prop>
+				<prop key="delete*">PROPAGATION_REQUIRED</prop>
+				<prop key="get*">PROPAGATION_REQUIRED,readOnly</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- Aop-声明式事务的配置 -->
+	<!-- 以AspectJ方式 定义 AOP -->
+	<!-- <aop:aspectj-autoproxy proxy-target-class="true"/> -->
+	<!-- <tx:jta-transaction-manager /> -->
+	<aop:config>
+		<aop:pointcut id="bidMethods"
+			expression="execution(* com.maien.system.manager.*.impl.*.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="bidMethods" />
+	</aop:config>
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="get*" read-only="true" propagation="NOT_SUPPORTED" />
+			<tx:method name="find*" read-only="true" propagation="NOT_SUPPORTED" />
+			<tx:method name="select*" read-only="true" propagation="NOT_SUPPORTED" />
+			<tx:method name="query*" read-only="true" propagation="NOT_SUPPORTED" />
+			<tx:method name="save*" propagation="REQUIRED"
+				rollback-for="com.raising.framework.exception.ServiceException" />
+			<tx:method name="insert*" propagation="REQUIRED"
+				rollback-for="com.raising.framework.exception.ServiceException" />
+			<tx:method name="add*" propagation="REQUIRED"
+				rollback-for="com.raising.framework.exception.ServiceException" />
+			<tx:method name="update*" propagation="REQUIRED"
+				rollback-for="com.raising.framework.exception.ServiceException" />
+			<tx:method name="delete*" propagation="REQUIRED"
+				rollback-for="com.raising.framework.exception.ServiceException" />
+		</tx:attributes>
+	</tx:advice>
+	<!-- 定义代理自动管理事务 -->
+	<!-- <bean id="ProxyCreator" class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator"> 
+		<property name="beanNames"> <list> <value>*testService</value> </list> </property> 
+		<property name="interceptorNames"> <list> <value>transactionInterceptor</value> 
+		</list> </property> </bean> -->
+</beans>

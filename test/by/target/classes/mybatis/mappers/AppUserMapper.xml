@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.mapper.AppMapper"> 
+	 <insert id="addAppUser"  parameterType="com.pojo.AppUserInfo">
+                   insert into user (merID,userName,password,model,validity,createTime,lastModiftyTime,isDel,des,createDate)
+                   values (#{merID},#{userName},#{password},#{model},#{validity},#{createTime},#{createTime},#{isDel},#{des},#{createDate})
+      </insert>
+	<select id="findAppUser" resultType="map" parameterType="com.pojo.AppUserInfo">
+		SELECT 
+			 u.version,m.name,u.id,u.merID,u.userName,u.password,u.token,u.tokenExpired,u.imei,u.model,u.validity,u.grossIncome,u.withdrawable,u.createTime,u.lastLoginTime,u.lastModiftyTime,u.isDel,u.des				
+		 FROM user  u
+		 LEFT JOIN merchant m ON u.merID = m.id 
+		where u.isDel=1
+			 <if test="userName !=null and userName !=''">
+					and u.userName like concat('%',#{userName},'%')
+				</if>
+				 <if test="null!= createTime and createTime !=''">
+                and u.createTime >=#{createTime}
+            </if>
+            <if test="null!= lastModiftyTime and lastModiftyTime !=''">
+                and u.createTime &lt;= #{lastModiftyTime}
+            </if>   
+            <if test="null!= merID and merID !=''">
+                and m.id = #{merID} 
+            </if>
+            ORDER BY u.id DESC
+	</select> 
+	<update id="deleteAppAccount" parameterType="com.pojo.AppUserInfo">
+		update
+		      user set isDel = #{isDel}, lastModiftyTime = #{lastModiftyTime} where id = #{id}
+	</update>
+	<update id="updateAppAccount" parameterType="com.pojo.AppUserInfo">
+		update
+		      user set validity = #{validity}, lastModiftyTime = #{lastModiftyTime},des = #{des} where id = #{id}
+	</update>
+	
+	<update id="updateIMEI" parameterType="com.pojo.AppUserInfo">
+		update
+		      user set imei = #{imei}, lastModiftyTime = #{lastModiftyTime} where id = #{id}
+	</update>
+	
+	
+	
+	<insert id="saveTask"  parameterType="com.pojo.TaskInfo">
+                   insert into task (name,type,contents,imgUrl,webUrl,bonus,createTime,lastModiftyTime,des,isDel,status)
+                   values (#{name},#{type},#{contents},#{imgUrl},#{webUrl},#{bonus},#{lastModiftyTime},#{lastModiftyTime},#{des},#{isDel},#{status})
+      </insert>
+      
+      <update id="updateTask" parameterType="com.pojo.TaskInfo">
+		update
+		      task set name = #{name},type=#{type},contents=#{contents},imgUrl=#{imgUrl},webUrl = #{webUrl},webUrl = #{webUrl},lastModiftyTime= #{lastModiftyTime},des = #{des} where id = #{id}
+	</update>
+	<update id="updateTaskStatus" parameterType="com.pojo.TaskInfo">
+		update
+		task set status = #{status},lastModiftyTime=#{lastModiftyTime} where id = #{id}
+	</update>
+      <select id="findAppTask" resultType="map" parameterType="com.pojo.TaskInfo">
+		SELECT 
+			 id,name,type,contents,imgUrl,webUrl,bonus,createTime,lastModiftyTime,isDel,des,status
+		 FROM task  
+		
+		where isDel=1
+			 <if test="name !=null and name !=''">
+					and name like concat('%',#{name},'%')
+				</if>
+				 <if test="null!= createTime and createTime !=''">
+                and createTime >=#{createTime}
+            </if>
+            <if test="null!= lastModiftyTime and lastModiftyTime !=''">
+                and createTime &lt;= #{lastModiftyTime}
+            </if>   
+             <if test="null!= id and id !=''">
+                and id = #{id}
+            </if>  
+             <if test="null!= status and status !=''">
+                and status = #{status}
+            </if> 
+             <if test="null!= bonus and bonus !=''">
+                and bonus >=#{bonus}
+            </if>
+            <if test="null!= testbonus and testbonus !=''">
+                and bonus &lt;= #{testbonus}
+            </if>   
+            ORDER BY id DESC
+	</select> 
+	
+	<update id="deleteAppTask" parameterType="com.pojo.TaskInfo">
+		update
+		task set isDel = #{isDel},lastModiftyTime=#{lastModiftyTime} where id = #{id}
+	</update>
+	
+	
+	<insert id="TaskRecordAddTask"  parameterType="com.pojo.TaskRecordInfo">
+                   insert into taskrecord (userID,taskID,bonus,status,createDate,createTime)
+                   values (#{userID},#{taskID},#{bonus},#{status},#{createDate},#{createTime})
+      </insert>	
+      <select id="findTaskRecord" resultType="map" parameterType="map">
+		SELECT 
+			m.name as M_name, tr.id,tr.userID,tr.taskID,tr.bonus,tr.status,tr.createDate,tr.createTime,tr.doneTime,t.name,u.userName
+		 FROM taskrecord tr
+		 LEFT JOIN task t ON tr.taskID = t.id   
+		 LEFT JOIN user u ON tr.userID = u.id
+		 LEFT JOIN merchant m ON u.merID = m.id
+		WHERE <!--  u.isDel=1 AND t.isDel =1--> 1=1
+			 <if test="userName !=null and userName !=''">
+					and u.userName like concat('%',#{userName},'%')
+				</if>
+				 <if test="null!= start and start !=''">
+                and tr.createTime >=#{start}
+            </if>
+            <if test="null!= end and end !=''">
+                and tr.createTime &lt;= #{end}
+            </if>   
+            <if test="null!= status">
+                and tr.status = #{status}
+            </if>  
+            <if test="null!= merID">
+                and u.merID = #{merID}
+            </if>  
+              ORDER BY createTime DESC
+	</select>
+      
+      
+   <insert id="saveNotice"  parameterType="com.pojo.NoticeInfo">
+   
+   	insert into notice (content,weixin1,weixin2 ,createTime,lastModiftyTime,des)
+                   values (#{content},#{weixin1},#{weixin2},#{lastModiftyTime},#{lastModiftyTime},#{des})
+                   
+  </insert>	
+  
+  <select id="findNotice" resultType="map" parameterType="com.pojo.NoticeInfo">
+		SELECT 
+			 id,content,weixin1,createTime,lastModiftyTime,des,weixin2
+		 FROM notice 
+		
+		WHERE 1=1
+			 <if test="content !=null and content !=''">
+					and content like concat('%',#{content},'%')
+				</if>
+				 <if test="null!= createTime and createTime !=''">
+                and createTime >=#{createTime}
+            </if>
+            <if test="null!= lastModiftyTime and lastModiftyTime !=''">
+                and createTime &lt;= #{lastModiftyTime}
+            </if> 
+            <if test="null!= id and id !=''">
+                and id = #{id}
+            </if>     
+              ORDER BY createTime DESC
+	</select> 
+	<update id="updaetNotice" parameterType="com.pojo.NoticeInfo">
+		update
+		notice set content = #{content},lastModiftyTime=#{lastModiftyTime},weixin1 = #{weixin1},weixin2 = #{weixin2},des=#{des} where id = #{id}
+	</update>
+	
+	<delete id="deleteNotice" parameterType="com.pojo.NoticeInfo">
+		DELETE FROM   notice  WHERE id = #{id}
+	</delete>
+	<select id="findCashrecord" resultType="map" parameterType="map">
+		SELECT 
+			 c.id,c.userID,c.method,c.amount,c.state,c.createTime,c.doneTime ,u.userName,m.name as MName
+		 FROM cashrecord c 
+		 LEFT JOIN user u ON c.userID = u.id
+		 LEFT JOIN merchant m ON u.merID = m.id
+		WHERE 1=1
+			 <if test="userName !=null and userName !=''">
+					and u.userName like concat('%',#{userName},'%')
+				</if>
+				 <if test="null!= start and start !=''">
+                and c.createTime >=#{start}
+            </if>
+            <if test="null!= end and end !=''">
+                and c.createTime &lt;= #{end}
+            </if>   
+            <if test="null!= state ">
+                and c.state = #{state}
+            </if>  
+            <if test="null!= type ">
+                and c.method = #{type}
+            </if> 
+            <if test="null!= merID ">
+                and u.merID = #{merID}
+            </if> 
+              ORDER BY createTime DESC
+	</select>
+	 <!-- 查询审核信息 -->
+	 <select id="findCheckCashApply" resultType="map" parameterType="com.pojo.NoticeInfo">
+		SELECT 
+			 c.id,c.userID,c.method,c.amount,c.state,c.createTime,c.doneTime,c.des,
+			 u.validity,u.grossIncome,u.withdrawable,u.userName,
+			 m.name,m.payInfo
+		 FROM cashrecord c 
+		 LEFT JOIN user u ON c.userID = u.id
+		 LEFT JOIN merchant m ON u.merID = m.id
+		WHERE c.id=#{id}
+	</select> 
+	
+	
+	<!-- 批量审核信息查询 -->
+	
+	<select id="findCheckCashApplyAll" resultType="map" parameterType="map">
+		SELECT 
+			 c.id,c.method,c.state,c.des,
+			 u.validity ,withdrawable,u.userName,
+			 m.name,m.payInfo,amount
+		 FROM cashrecord c 
+		 LEFT JOIN USER u ON c.userID = u.id
+		 LEFT JOIN merchant m ON u.merID = m.id 
+		WHERE u.merID = #{merID} AND method = #{type} and c.createTime >=#{start} and c.createTime &lt;= #{end}   AND c.state = 0
+		
+		<!--  String end ,String start,Integer type,Integer merID-->
+	</select> 
+	
+	<!-- 修改审核状态 -->
+	<update id="updateCheckCashApply" parameterType="com.pojo.CashrecordInfo">
+		update
+		cashrecord set state = #{state},doneTime=#{doneTime},des=#{des},createDate=#{createDate} where id = #{id} and state =0
+	</update>
+	<!-- 改回修改前的状态0 -->
+	<update id="updateCheckCashApplyStauts0" parameterType="com.pojo.CashrecordInfo">
+		update
+		cashrecord set state = #{state},doneTime=#{doneTime},des=#{des} where id = #{id} 
+	</update>
+	  <select id="findCashrecordId" resultType="com.pojo.CashrecordInfo" parameterType="com.pojo.CashrecordInfo">
+		SELECT 
+			 c.id,c.userID,c.method,c.amount,c.state,c.createTime,c.doneTime 
+		 FROM cashrecord c
+		WHERE id=#{id}
+			  
+	</select>
+	<!-- 提现失败加回用户金额 -->
+	<update id="updateAppUserWithdrawable" parameterType="com.pojo.AppUserInfo">
+		update
+		user set withdrawable = withdrawable + #{withdrawable},lastModiftyTime= #{lastModiftyTime} where id = #{id}
+	</update>
+	<!-- 提现成功 ，加已提现金额 -->
+	<update id="updateAppUserGrossIncome" parameterType="com.pojo.AppUserInfo">
+		update
+		user set grossIncome = grossIncome + #{grossIncome},lastModiftyTime= #{lastModiftyTime} where id = #{id}
+	</update>
+	 <insert id="saveSetting"  parameterType="com.pojo.SettingInfo">
+   
+   		insert into setting (setKey,setValue,des)
+                   values (#{setKey},#{setValue},#{des})
+                   
+  	</insert>	
+  	
+  	  <select id="findSetting" resultType="map" parameterType="com.pojo.SettingInfo">
+		SELECT 
+			 id,setKey,setValue,des
+		 FROM setting 
+		
+		WHERE 1=1
+			 <if test="setKey !=null and setKey !=''">
+					and setKey like concat('%',#{setKey},'%')
+				</if>
+			
+            <if test="null!= id and id !=''">
+                and id = #{id}
+            </if>     
+             
+	</select> 
+	<update id="updaetSetting" parameterType="com.pojo.SettingInfo">
+		update
+		setting set setKey = #{setKey},setValue = #{setValue},des=#{des} where id = #{id}
+	</update>
+	
+	<delete id="deleteSetting" parameterType="com.pojo.SettingInfo">
+		DELETE FROM   setting  WHERE id = #{id}
+	</delete>
+	  
+	 <select  id="findSettingName"  parameterType="com.pojo.Merchant" resultType="int">
+		select count(1) FROM setting      
+	      where  1=1 
+			  
+			    <if test="setKey !=null">
+					and setKey =#{setKey} 
+				</if>
+					       
+	</select >
+	<select  id="findApk"   resultType="map">
+		select id,version,appUrl,des,createTime,lastModiftyTime,type FROM appversion      
+	      
+					       
+	</select > 
+	
+	<update id="updateApk" parameterType="com.pojo.AppversionInfo">
+		update
+		   appversion set version = #{version},appUrl = #{appUrl},lastModiftyTime= #{lastModiftyTime},type = #{type} where id = #{id}
+	</update>
+	
+	
+	 <select id="findMhtotaldata" resultType="map" parameterType="map">
+		SELECT 
+			  id,dateInt,merchantId,merchantName,autCount,netCount,exTaskCount,oDIntCount,oDExIntCount,totalIntCount,tatalIncome,notTotalIntCont,createTime,lastModiftyTime
+		 FROM mhtotaldata
+		
+		WHERE 1=1
+			 <if test="merID !=null and merID !=''">
+					and merchantId =#{merID}
+				</if>
+				 <if test="null!= start and start !=''">
+                and createTime >=#{start}
+            </if>
+            <if test="null!= end and end !=''">
+                and createTime &lt;= #{end}
+            </if>   
+           
+              ORDER BY createTime DESC
+	</select>
+	
+	<select id="findTotaldata" resultType="map" parameterType="map">
+		SELECT 
+			  id,dateInt,autCount,addAutCount,netCount,exTaskCount,addNetCount,oDIntCount,oDExIntCount,totalIntCount,tatalIncome,notTotalIntCount,createTime,lastModiftyTime
+		 FROM totaldata
+		
+		WHERE 1=1
+		
+				 <if test="null!= start and start !=''">
+                and createTime >=#{start}
+            </if>
+            <if test="null!= end and end !=''">
+                and createTime &lt;= #{end}
+            </if>  
+            <if test="null!= dateInt and dateInt !=''">
+                and dateInt = #{dateInt}
+            </if> 
+             
+           
+              ORDER BY createTime DESC
+	</select>
+	 <select id="taskAVG" resultType="map" >
+	 
+		SELECT CAST(IFNULL(AVG(bonus),0) AS DECIMAL(18,5))AS  avg   FROM task  WHERE isDel = 1 and status =1			  
+	</select>
+	
+	<select id="findacusertotaldate" resultType="map" parameterType="map">
+		 
+		SELECT  	        
+	        CAST(IFNULL(tr.sum_bonus,0) AS DECIMAL(18,2))AS  sum_bonus, u.userName ,u.id ,m.name AS M_name,u.validity,u.grossIncome,u.withdrawable,tr.createDate
+		 FROM  (SELECT id,userName ,merID,validity,grossIncome,withdrawable  FROM USER WHERE isDel =1
+        	
+         	GROUP BY id,merID)  u
+         	LEFT JOIN (SELECT  createDate,userID ,SUM(bonus) AS sum_bonus FROM  taskrecord  
+         		where status=1
+         		
+                 and createDate =#{start}
+
+         	GROUP BY userID,createDate) tr ON u.id = tr.userID   
+
+		LEFT JOIN merchant m ON u.merId  = m.id
+		WHERE <!--  u.isDel=1 AND t.isDel =1--> 1=1
+		
+			 <if test="MHName !=null and MHName !=''">
+					and m.name like concat('%',#{MHName},'%')
+				</if>
+			 <if test="userName !=null and userName !=''">
+					and u.userName like concat('%',#{userName},'%')
+				</if>
+				 
+           
+            <if test="null!= merID">
+                and u.merID = #{merID}
+            </if>  
+              ORDER BY u.id DESC
+	
+	</select>
+	<!-- 隔日审核 列表-->
+	<select id="findDatacashrecord" resultType="map" parameterType="map">
+		SELECT 
+			  id,createDate,method,mhName,des,createTime,doneTime,state,count,amount,mhId,lastModiftyTime
+		 FROM datacashrecord
+		
+		WHERE  1=1
+		
+			<if test="null!= start and start !=''">
+                and createDate =#{start}
+            </if>
+            
+            <if test="null!= type and type !=''">
+                and method = #{type}
+            </if> 
+            <if test="null!= merID">
+                and mhId = #{merID}
+            </if>  
+           <if test="null != state"> and state=#{state}</if>
+           
+           
+           <if test="null!= startDate and startDate !=''">
+                 and createDate >=#{startDate}
+            </if>
+            <if test="null!= endDate and endDate !=''">
+                and createDate &lt;= #{endDate}
+            </if>   
+              ORDER BY createTime DESC
+	</select>
+	<!-- 隔日获取审核 -->
+	<select id="findOnDatecheck_cashApply" resultType="map" parameterType="map">
+		SELECT 
+			 c.id,c.method,c.state,c.des,
+			 u.validity ,withdrawable,u.userName,
+			 m.name,m.payInfo,amount
+		 FROM cashrecord c 
+		 LEFT JOIN USER u ON c.userID = u.id
+		 LEFT JOIN merchant m ON u.merID = m.id 
+		WHERE u.merID = #{mhId} AND method = #{method} and c.createDate =#{createDate} AND c.state = 0
+		
+	</select> 
+	<!-- 修改隔日记录表 --> 
+	 <update id="updaetDataCashrecord" parameterType="com.pojo.DataCashrecordInfo">
+		update
+		datacashrecord set state = #{state},lastModiftyTime = #{doneTime} ,doneTime = #{doneTime}
+				where createDate = #{createDate} and  method = #{method} and mhId = #{mhId}
+	</update>
+	
+	
+	<!-- 新增代理审核 -->
+	 <insert id="addagency"  parameterType="com.pojo.AgencycashrecordInfo">
+                   insert into agencycashrecord (agencyId,mhId,count,createDate,des,createTime,amount,status)
+                   values (#{agencyId},#{mhId},#{count},#{createDate},#{des},#{createTime},#{amount},#{status})
+      </insert>
+	 
+	 <select id="findAgency" resultType="map" parameterType="map">
+		SELECT 
+			ag.doneTime,ag.status,ag.id,ag.agencyId,ag.mhId,ag.count,ag.createDate,ag.des,ag.createTime,ag.amount,m1.name as anName ,m2.name mhName		
+		 FROM agencycashrecord  ag
+		 LEFT JOIN merchant m1 ON ag.agencyId = m1.id
+		 LEFT JOIN merchant m2 ON ag.mhId = m2.id
+		where 1=1
+			 <if test="agencyId !=null and agencyId !=''">
+					and ag.agencyId = #{agencyId}
+				</if>
+				 <if test="null!= createTime and createTime !=''">
+                and ag.createTime >=#{createTime}
+            </if>
+            <if test="null!= lastModiftyTime and lastModiftyTime !=''">
+                and ag.createTime &lt;= #{lastModiftyTime}
+            </if>   
+            <if test="null!= mhId and mhId !=''">
+                and ag.mhId = #{mhId} 
+            </if>
+             <if test="null != status">
+                and ag.status = #{status} 
+            </if>
+            
+            ORDER BY ag.id DESC
+	</select> 
+	 <!-- 代理审核信息 -->
+	<select id="findAgencyCheck" resultType="map" parameterType="com.pojo.AgencycashrecordInfo">
+		SELECT 
+			ag.status,ag.id,ag.agencyId,ag.mhId,ag.count,ag.createDate,ag.des,ag.createTime,ag.amount,m.name,m.payInfo
+		 FROM agencycashrecord  ag		
+		 LEFT JOIN merchant m ON ag.agencyId = m.id 
+		WHERE ag.id = #{id} 
+		
+	</select> 
+	
+	<!-- 修改代理信息 -->
+	<update id="updateAgencyCheck" parameterType="com.pojo.AgencycashrecordInfo">
+		update
+		agencycashrecord set status = #{status} ,doneTime = #{doneTime},des = #{des}
+				where id = #{id} and status = 0
+	</update>
+	
+</mapper>
+
+
+
+
+

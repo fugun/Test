@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd 
+       http://www.springframework.org/schema/aop 
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.0.xsd"
+	default-lazy-init="false">
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+	<!-- 对静态资源文件的访问 方案一 （二选一） <mvc:default-servlet-handler /> -->
+	<!-- 对静态资源文件的访问 方案二 （二选一） -->
+	<!-- 静态资源转发 <mvc:resources location="/staticres/" mapping="/staticres/**" 
+		/> -->
+	<!-- 对某些静态资源，如css,图片等进行过滤 ,有引用 "/resources/**" 的路径引用转到工程的/resources/目录取资源 -->
+	<!--web.xml 里面是对xhtml执行spring，所以这里的静态资源文件可以不用设置了 <mvc:resources mapping="/images/**" 
+		location="/images/" cache-period="31556926" /> <mvc:resources mapping="/js/**" 
+		location="/js/" cache-period="31556926" /> <mvc:resources mapping="/css/**" 
+		location="/css/" cache-period="31556926" /> <mvc:resources mapping="/resources/**" 
+		location="/resources/" cache-period="31556926" /> -->
+	<!-- 启动Spring MVC的注解功能，完成请求和注解POJO的映射 -->
+	<!-- 使用如下两个class激活@RequestMapping annotation -->
+	<!-- 另外最好还要加入DefaultAnnotationHandlerMapping，不然会被 XML或其它的映射覆盖！ -->
+	<!-- 加了后DefaultAnnotationHandlerMapping的useDefaultSuffixPattern属性配置不起作用了，奇怪。 
+		<mvc:annotation-driven /> -->
+	<!-- 启动springmvc的注解映射功能 Spring 容器会默认加载 p:useDefaultSuffixPattern 表示匹配 *.* 
+		感觉设置成false好点，但是设置成true，和web.xml 的的filter配合使用可以灵活控制后缀名的具体操作 -->
+	<mvc:annotation-driven />
+	<mvc:default-servlet-handler />
+	<mvc:resources location="/styles/" mapping="/styles/**" />
+	<mvc:resources location="/WEB-INF/view/styles/"
+		mapping="/WEB-INF/view/styles/**" />
+	<mvc:resources location="/scripts/" mapping="/scripts/**" />
+	<mvc:resources location="/WEB-INF/view/scripts/"
+		mapping="/WEB-INF/view/scripts/**" />
+	<mvc:resources location="/css/" mapping="/css/**" />
+	<mvc:resources location="/WEB-INF/view/css/"
+		mapping="/WEB-INF/view/css/**" />
+	<mvc:resources location="/images/" mapping="/images/**" />
+	<mvc:resources location="/WEB-INF/view/images/"
+		mapping="/WEB-INF/view/images/**" />
+	<mvc:resources location="/js/" mapping="/js/**" />
+	<mvc:resources location="/WEB-INF/view/js/"
+		mapping="/WEB-INF/view/js/**" />
+	<mvc:resources location="/fonts/" mapping="/fonts/**" />
+	<mvc:resources location="/plugins/" mapping="/plugins/**" />
+	<mvc:resources location="/res/" mapping="/res/**" />
+	<mvc:resources location="/ckplayer/"
+		mapping="/ckplayer/**" />
+	<mvc:view-controller path="/WEB-INF/view/"
+		view-name="mainFrame.jsp" />
+	<!-- html视图解析器 必须先配置freemarkerConfig,注意html是没有prefix前缀属性的 -->
+	<bean id="freemarkerConfig"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="templateLoaderPath">
+			<value>/WEB-INF/view/</value>
+		</property>
+	</bean>
+	<bean id="htmlviewResolver"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="suffix" value=".html" />
+		<property name="order" value="0"></property>
+		<property name="contentType" value="text/html;charset=UTF-8"></property>
+	</bean>
+	<!-- 启动springmvc的注解功能 支持多动作类似： /userinfo?method=login -->
+	<!-- <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" 
+		p:useDefaultSuffixPattern="false" p:order="1" /> <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" 
+		p:messageConverters-ref="mappingJacksonHttpMessageConverter"> <property name="webBindingInitializer"> 
+		<bean class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer"> 
+		<property name="validator" ref="validator" /> </bean> </property> </bean> 
+		<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" 
+		primary="true" /> -->
+	<!-- Spring3 mvc @ResponseBody 中文乱码编码问题解决 <property name="messageConverters"> 
+		<list> <bean class="org.springframework.http.converter.StringHttpMessageConverter"> 
+		<property name="supportedMediaTypes"> <list> <value>text/plain;charset=UTF-8</value> 
+		</list> </property> </bean> </list> </property> -->
+	<!-- <bean id="mappingJacksonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" 
+		/> -->
+	<!-- 自动扫描bean，把作了注解的类转换为bean -->
+	<context:component-scan
+		base-package="com.maien.system">
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	<!-- 现在"/accounts/*" 只要添加上方法名就能够完成上述映射。 -->
+	<!-- bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping"/> -->
+	<!-- 多语言切换 <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver" 
+		/> <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" 
+		p:paramName="Language" /> -->
+	<!-- 根据客户端的不同的请求决定不同的view进行响应, 如 /blog/1.json /blog/1.xml -->
+	<bean
+		class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+		<property name="order" value="1" />
+		<property name="contentNegotiationManager">
+			<bean
+				class="org.springframework.web.accept.ContentNegotiationManager">
+				<constructor-arg>
+					<bean
+						class="org.springframework.web.accept.PathExtensionContentNegotiationStrategy">
+						<constructor-arg>
+							<map>
+								<entry key="json" value="application/json;charset=utf-8" />
+								<entry key="xmlx" value="application/xml;charset=utf-8" />
+							</map>
+						</constructor-arg>
+					</bean>
+				</constructor-arg>
+			</bean>
+		</property>
+		<property name="viewResolvers">
+			<list>
+				<bean
+					class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+					p:contentType="text/html;charset=utf-8" p:prefix="" p:suffix=".jsp"
+					p:viewClass="org.springframework.web.servlet.view.JstlView"
+					p:redirectContextRelative="true" p:redirectHttp10Compatible="true" />
+				<!-- <bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver" 
+					p:cache="true" p:prefix="" p:suffix=".ftl" /> -->
+			</list>
+		</property>
+		<property name="defaultViews">
+			<list>
+				<bean
+					class="org.springframework.web.servlet.view.json.MappingJackson2JsonView"
+					p:extractValueFromSingleKeyModel="true"
+					p:exposePathVariables="false" />
+				<bean
+					class="org.springframework.web.servlet.view.xml.MarshallingView">
+					<property name="marshaller">
+						<bean
+							class="org.springframework.oxm.xstream.XStreamMarshaller"
+							p:autodetectAnnotations="true" />
+						<!-- <bean class="org.springframework.oxm.jaxb.Jaxb2Marshaller" p:packagesToScan="com.raising.system"> 
+							<property name="classesToBeBound"> <array> <value>com.raising.system.framework.dao.page.impl.PageImpl</value> 
+							<value>com.raising.system.web.controller.JsonResult</value> </array> </property> 
+							</bean> -->
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<!-- <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" 
+		p:contentType="text/html;charset=utf-8" p:prefix="" p:suffix=".jsp" p:viewClass="org.springframework.web.servlet.view.JstlView" 
+		p:redirectContextRelative="true" p:redirectHttp10Compatible="true" /> -->
+	<!-- 设置上传文件大小的参数 -->
+	<context:property-placeholder
+		ignore-resource-not-found="false"
+		location="classpath:properties/upload.properties" />
+	<!-- 文件上传 查阅 spring MVC 文件上传的异常处理.txt -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
+		p:resolveLazily="true" p:defaultEncoding="${upload.defaultEncoding}"
+		p:maxUploadSize="${upload.maxUploadSize}"
+		p:maxInMemorySize="${upload.maxInMemorySize}" />
+
+	<!-- <bean id="viewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver"> 
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" 
+		/> <property name="prefix" value="/jsp/" /> <property name="suffix" value=".jsp" 
+		/> </bean> -->
+	<!--自定义错误友好提示 -->
+	<bean id="exceptionResolver"
+		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="defaultErrorView"
+			value="/inc/error/exception" />
+		<property name="exceptionMappings">
+			<props>
+				<prop
+					key="org.springframework.web.bind.MissingServletRequestParameterException">/inc/error/userLoginException</prop>
+				<prop key="org.apache.shiro.authz.UnauthorizedException">/inc/error/unauthorizedException</prop>
+			</props>
+		</property>
+	</bean>
+	<!-- <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer"> 
+		<property name="templateLoaderPath" value="/WEB-INF/freemarker/"/><property 
+		name="freemarkerSettings"> <props> <prop key="template_update_delay">0</prop> 
+		<prop key="default_encoding">UTF-8</prop> <prop key="locale">zh_CN</prop> 
+		<prop key="url_escaping_charset">UTF-8</prop> <prop key="datetime_format">yyyy-MM-dd 
+		HH:mm:ss</prop> <prop key="date_format">yyyy-MM-dd</prop> <prop key="time_format">HH:mm:ss</prop> 
+		<prop key="number_format">#.##</prop> <prop key="boolean_format">true,false</prop> 
+		<prop key="template_exception_handler">ignore</prop> //<prop key="auto_import">"/spring.ftl" 
+		as spring</prop> <prop key="whitespace_stripping">true</prop> <prop key="tag_syntax">auto_detect</prop> 
+		</props> </property> </bean> <bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver"> 
+		<property name="cache" value="true"/> <property name="prefix" value=""/> 
+		<property name="suffix" value=".ftl"/> </bean> -->
+	<!-- <bean id="MethodNameResolver" class="org.springframework.web.servlet.mvc.multiaction.ParameterMethodNameResolver" 
+		p:methodParamNames="act" p:defaultMethodName="view" /> -->
+	<!-- 手动设置某一个 Controller public class MyContr extends MultiActionController 
+		{ public ModelAndView view(HttpServletRequest request, HttpServletResponse 
+		response) throws Exception { return null; } } <bean id="productController" 
+		class="ee.bug.ProductController"> <property name="methodNameResolver"><ref 
+		local="MethodNameResolver"/></property> </bean> -->
+	<!-- 输入view.do?method=view 显示Viewing 输入view.do?method=index 显示index 输入/view.do?method=fdsf 
+		显示404错误 -->
+	<!-- Shiro权限 -->
+	<!-- 开启Shiro注解的Spring配置方式的beans。在lifecycleBeanPostProcessor之后运行 -->
+	<bean
+		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+		depends-on="lifecycleBeanPostProcessor" />
+	<!-- <import resource="spring-freemarker.xml" /> -->
+	<!-- <import resource="spring-theme.xml" /> -->
+</beans>

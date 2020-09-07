@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+    
+    <head>
+        <meta charset="UTF-8">
+        <title>欢迎页面-X-admin</title>
+        <meta name="renderer" content="webkit">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <!--  <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />-->
+        <link rel="stylesheet" href="../css/font.css">
+        <link rel="stylesheet" href="../css/xadmin.css">
+        <script src="../lib/layui/layui.js" charset="utf-8"></script>
+        <script type="text/javascript" src="../js/xadmin.js"></script>
+         <script type="text/javascript" src="../js/jquery.min.js"></script>
+         <script type="text/javascript" src="../js/iosiframe.js"></script>
+        <!--[if lt IE 9]>
+          <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+          <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    
+    <body>
+         <!-- <div class="x-nav">
+            <span class="layui-breadcrumb">
+                <a href="">首页</a>
+                <a href="">演示</a>
+                <a>
+                    <cite>导航元素</cite></a>
+            </span>
+            
+        </div>-->
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-body ">
+                            <form class="layui-form layui-col-space5">
+                                <div class="layui-inline layui-show-xs-block">
+                                    <input class="layui-input" autocomplete="off" placeholder="开始日" name="start" id="start"></div>
+                                <div class="layui-inline layui-show-xs-block">
+                                    <input class="layui-input" autocomplete="off" placeholder="截止日" name="end" id="end"></div>
+                                <div class="layui-inline layui-show-xs-block">
+                                    <input type="text" name="username" placeholder="请输入用户名" autocomplete="off" id = "username" class="layui-input"></div>
+                                <div class="layui-inline layui-show-xs-block">
+                                    <button class="layui-btn" lay-submit="" lay-filter="sreach" id ="sreach" >
+                                        <i class="layui-icon">&#xe615;</i></button>
+                                </div>
+                                <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
+						                <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
+						         </a>
+                            </form>
+                        </div>
+                        <div class="layui-card-body ">
+                        <table class="layui-table" id="LAY_table_user" lay-filter="tableAll"></table>
+                           <!--  <table class="layui-table" lay-data="{url:'./json/find',page:true,toolbar: '#toolbarDemo',id:'tableAll'}" lay-filter="tableAll">
+                                <thead>
+                                    <tr style = "height:50px">
+                                        <th lay-data="{type:'checkbox'}">id</th>
+                                        <th lay-data="{field:'id', width:80, sort: true}">ID</th>
+                                        <th lay-data="{field:'loginName', width:120, sort: true,templet: '#loginName'}">用户名</th>
+                                        <th lay-data="{field:'status', width:120,templet: '#switchTpl'}">用户状态</th>
+                                        <th lay-data="{field:'userId', width:120,templet: '#switchTplUser'}">添加状态</th>
+                                        <th lay-data="{field:'experience', templet: '#operator'}">操作</th>-->
+                                        <!-- <th lay-data="{field:'dw_xinzhi',templet: function(d){ return d.dw_xinzhi.titel;}}">学校</th>
+                                        
+                                   </tr>
+                                </thead>
+                            </table>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script type="text/html" id="toolbarDemo">
+        <div class = "layui-btn-container" > 
+			<button class="layui-btn" lay-event = "addAll"" ><i class="layui-icon"></i>批量添加</button>
+         	
+            <button class = "layui-btn layui-btn-sm" lay-event = "getCheckData" > 获取选中行数据 </button>
+            <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button > 
+            <button class = "layui-btn layui-btn-sm" lay-event = "isAll" > 验证是否全选</button>
+        </div > 
+		
+          
+    </script>
+    
+    <script type="text/html" id="loginName">
+		<tb id = "statusUpLoginName">
+		 <span>{{d.roleName!=null?d.roleName:''}}</span></tb>
+        
+    </script>
+    <script type="text/html" id="switchTpl">
+		<tb id = "statusUp">
+		 <span class="layui-btn layui-btn-normal layui-btn-mini {{d.status==1?'':'layui-btn-disabled'}}" >{{d.status==1?'已启用':'已停用'}}</span></tb>
+        <!-- 这里的checked的状态只是演示 
+        <input type = "text" name = "status" value = "{{d.status==1?'启用':'停用'}}"    disabled="true" lay-skin = "switch"lay-text = "启用|停用" lay-filter = "sexDemo" >-->
+    </script>
+     <script type="text/html" id="switchTplUser">
+		<tb id = "statusUpUser">
+		 <span class="layui-btn layui-btn-normal layui-btn-mini {{d.roleStatus==1?'':'layui-btn-disabled'}}" >{{d.roleStatus==1?'已添加':'未添加'}}</span></tb>
+        
+    </script>
+    <script type="text/html" id="operator">
+         <a onclick="member_stop(this,{{d.id}})" href="javascript:;"  title="{{d.status==1?'启用':'停用'}}">
+         	 <i class="layui-icon">&#{{d.status==1?'xe62f;':'xe601;'}}</i>
+         </a>
+         <a title="编辑"  onclick="xadmin.open('编辑','update-user.html?id={{d.id}}&roleName={{d.loginName}}&email={{d.email}}',600,400)" href="javascript:;">
+             <i class="layui-icon">&#xe642;</i>
+         </a>
+		 <a onclick="member_RoleStatus(this,{{d.id}},{{d.userroleId}},{{d.roleId}})" href="javascript:;"  title="{{d.roleStatus==1?'已添加':'未添加'}}">
+         	 <i class="layui-icon">{{d.roleStatus==1?'':''}}</i>
+         </a>                             
+	</script>
+    <script> 
+    
+    	layui.use('laydate', function(){
+        	var laydate = layui.laydate;
+       		 
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#start' //指定元素
+                	,type: 'datetime'
+            });
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#end' //指定元素
+                	,type: 'datetime'
+            });
+
+        });</script>
+    <script>
+    var idlength  = "";  // 保存多选id  用于删除提示展示
+	var objCheckList  = "";  // 保存多选id_当前状态_菜单权限组id_
+    var page = 1;
+    layui.use('table',
+        function() {
+            var table = layui.table;
+            getRoleId();//存入roleID  //返回roleId
+            getRoleName();//存入roleName  //返回roleName
+            var loadi = layer.load('加载中......');
+        	
+          //方法级渲染
+            table.render({
+                elem: '#LAY_table_user'
+                ,url: './userRole_user_role/find'
+                ,cols: [[
+                     {field:'id',checkbox: true,templet: '#checkboxOnclick'}
+                    ,{field:'id',title: 'ID', width:80, sort: true} //用户id
+                    ,{field:'loginName',title: '用户名', width:120, sort: true}
+                    ,{field:'roleName',title: '角级组', width:120, sort: true,templet: '#loginName'}
+                    ,{field:'status',title: '用户状态', width:120,templet: '#switchTpl'}
+                    //,{field:'date', title: '日期', width:180}
+                   // ,{field:'datatype', title: '日期类型', width:100}
+                    ,{ field:'roleStatus', title: '添加状态',width:120,templet: '#switchTplUser'}
+                  
+                    ,{field:'experience', templet: '#operator'}
+                ]]
+                ,id: 'tableAll'
+                ,page: true
+                ,toolbar:'#toolbarDemo'
+                ,where:{'rolename':getRoleName()}
+            });
+            
+        	layer.close(loadi);
+            //监听单元格编辑
+            table.on('edit(tableAll)',
+            function(obj) {
+                var value = obj.value //得到修改后的值
+                ,
+                data = obj.data //得到所在行所有键值
+                ,
+                field = obj.field; //得到字段
+                layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改为：' + value);
+            });
+            //头工具栏事件
+            table.on('toolbar(tableAll)',
+            function(obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                var check_val = "";  //得到id_当前状态_菜单权限组id_
+                var ids = "";  // 得到要展示的ID
+        		var str = objCheckList.split(",");
+        	    //console.log(str);
+        	    if(objCheckList!=null && objCheckList!=""){
+        	            //checkOnes[i].checked=false;
+        	            for(var a= 0 ;str.length>a;a++){
+        	       			if(str[a]!=null && str[a]!=""){
+        	       				if(str[a].indexOf("-") == -1){
+        	       					if(check_val==""){	       	           		 
+        	       			           	 check_val =str[a];
+        	       			              //console.log(str[a]);
+        	       			        }else{
+        	       			           	check_val = check_val +","+ str[a];	       			           		 
+        	       			        }
+        	       				}
+        	       		   }
+        	        }
+        	    }
+        	    console.log(idlength);
+        	    str = idlength.split(",");
+        	    if(idlength!=null && idlength!=""){
+    	            //checkOnes[i].checked=false;
+    	            for(var a= 0 ;str.length>a;a++){
+    	       			if(str[a]!=null && str[a]!=""){
+    	       				if(str[a].indexOf("-") == -1){
+    	       					if(ids==""){	       	           		 
+    	       						ids =str[a];
+    	       			              //console.log(str[a]);
+    	       			        }else{
+    	       			        	ids = ids +","+ str[a];	       			           		 
+    	       			        }
+    	       				}
+    	       		   }
+    	        }
+    	     }
+                switch (obj.event) {
+                case 'addAll':
+                	//var ids = [];
+                	//var id = [];
+                	//var dataList = checkStatus.data;
+                	//$.each(dataList, function(i, data) {
+                		//console.log(data.id);
+                		//ids.push(data.id);
+                		//id.push(data.id+"_"+data.roleStatus+"_"+data.menuRoleId+"_");
+                	//});
+                	if(check_val.length<1){
+                     	layer.msg('请选择要添加的列!', {icon: 7});
+                     	return false;
+                     }
+                    layer.confirm('确认要添加吗？'+ids,function(index){
+                       
+                    	var loadi = layer.load('加载中......');
+                    	
+	                    var url = "add/userRoleInfoAll";
+	                    var data ={
+	                    		id:check_val,
+	                    		roleId:getUrlParam("roleId")
+	                    		
+	                        };            
+	                    $.ajax({
+	                		url:url,
+	                		data:data,
+	                		type:'post',
+	                		dataType:'json',
+	                		success: function(result){
+	                			
+	                        	layer.close(loadi);
+	                			//console.log(result.code);
+	                			if(result.code==200){                				
+	                				//发异步添加数据
+	               				 layer.msg('添加成功', {icon: 1});
+	                                //$(".layui-form-checked").not('.header').parents('tr').remove();
+	                               //清除数据
+	                                idlength  = "";  // 保存多选id  用于删除提示展示
+									 objCheckList  = "";  // 保存多选id_当前状态_菜单权限组id_
+									  page = 1;
+									    // 重新刷新
+	                               f5(table);
+	                               return false;
+	                			}else{
+	                				layer.alert(result.msg, {
+	                                    icon: 7
+	                                });
+	                			}
+	                			
+	                		},
+	                		error: function(e){
+	                			//alert("通信失败!");
+	                		}
+	                	});
+                       
+                    });
+                	break;
+                case 'getCheckData':
+                    var data = checkStatus.data;
+                    layer.alert(JSON.stringify(data));
+                    break;
+                case 'getCheckLength':
+                	// var data = checkStatus.data;
+                    
+                    layer.msg('选中了：' + ids.split(",").length + ' 个');
+                    break;
+                case 'isAll':
+                    layer.msg(checkStatus.isAll ? '全选': '未全选');
+                    break;
+                };
+            });
+            
+         
+            
+	        $('#sreach').on('click', function() {
+	      		  f5(table);
+	      		return false;
+	      	});  	
+	     // 第一步 获取name属性为luck值得对象数组(节点数组)   
+            var luckElements =  document.getElementsByClassName("layui-table-header")                   
+                    /*
+                        第二步 遍历节点数组
+                    */
+                    for(var i=0;i<luckElements.length;i++){
+                        //获取元素的value值
+                       // alert(luckElements[i].value);
+                        //获取元素的type值
+                       // alert(luckElements[i].type);
+                        //为每一个元素的onclick属性赋值即为文本框增加点击事件
+                        luckElements[i].onclick=function(){
+				             setTimeout(function() {
+				            	 // 获取当前页面做拼接
+				            	  
+				            	 var checkStatus = table.checkStatus("tableAll");    	                 			  
+	                 				var ids = "";
+	                             	var idList = "";
+	                             	var dataList = checkStatus.data;
+	                             	//console.log(dataList);
+	                             	$.each(dataList, function(i, data) {
+	                             		//console.log(data.id);
+	                             	    ids = ids +","+ data.id;
+	                             	   idList = idList +","+ data.id+"_"+data.roleStatus+"_"+data.menuRoleId+"_";
+	                             	});
+	                             	chakAdd(page,ids,idList)
+				             },  500);	
+                        }
+                    }
+            
+            var main =  document.getElementsByClassName("layui-table-body layui-table-main")
+                    for(var i=0;i<main.length;i++){                        
+			              main[i].onclick=function(){
+           	 			console.log("fhu");
+			            	 setTimeout(function() {
+			            		
+				            	 var checkStatus = table.checkStatus("tableAll");    
+			         			  
+			         				var ids = [];
+			                     	var idList = [];
+			                     	var dataList = checkStatus.data;
+			                     	//console.log(dataList);
+			                     	$.each(dataList, function(i, data) {
+	                             		//console.log(data.id);
+	                             	    ids.push(data.id);
+	                             		idList.push(data.id+"_"+data.roleStatus+"_"+data.menuRoleId+"_");
+	                             	});
+	                             	chakAdd(page,ids,idList)
+				             },  100);	
+             			}
+                    }
+            
+            // 绑定分页
+            var table_page =  document.getElementsByClassName("layui-table-page")
+                    for(var i=0;i<table_page.length;i++){                       
+			              table_page[i].onclick=function(){
+           	 				// 给点击页给值 
+           	 				page = $("#pageId").val();
+           	 			console.log(page);
+			            	 setTimeout(function() {
+			            		 // 设置选中项
+			            		 chak();
+				             },  100);	
+             			}
+                    }
+            
+            	 	 	
+        });
+ 	// 刷新查询
+	 function f5(table){
+		 var loadi = layer.load('加载中......');
+     	
+    	table.reload('tableAll', {
+			method : 'post',
+			where : {
+				username : $('#username').val(),
+				start:$("#start").val(),
+				end:$("#end").val()
+			},
+			page : {
+				curr : 1
+			}
+		});
+    	 // 第一步 获取name属性为luck值得对象数组(节点数组)   
+        var luckElements =  document.getElementsByClassName("layui-table-header")                   
+                /*
+                    第二步 遍历节点数组
+                */
+                for(var i=0;i<luckElements.length;i++){
+                    //获取元素的value值
+                   // alert(luckElements[i].value);
+                    //获取元素的type值
+                   // alert(luckElements[i].type);
+                    //为每一个元素的onclick属性赋值即为文本框增加点击事件
+                    luckElements[i].onclick=function(){
+			             setTimeout(function() {
+			            	 // 获取当前页面做拼接
+			            	  
+			            	 var checkStatus = table.checkStatus("tableAll");    	                 			  
+                				var ids = "";
+                            	var idList = "";
+                            	var dataList = checkStatus.data;
+                            	//console.log(dataList);
+                            	$.each(dataList, function(i, data) {
+                            		//console.log(data.id);
+                            	    ids = ids +","+ data.id;
+                            	   idList = idList +","+ data.id+"_"+data.roleStatus+"_"+data.menuRoleId+"_";
+                            	});
+                            	chakAdd(page,ids,idList)
+			             },  500);	
+                    }
+                }
+        
+        var main =  document.getElementsByClassName("layui-table-body layui-table-main")
+                for(var i=0;i<main.length;i++){                        
+		              main[i].onclick=function(){
+       	 			//console.log("fhu");
+		            	 setTimeout(function() {
+		            		
+			            	 var checkStatus = table.checkStatus("tableAll");    
+		         			  
+		         				var ids = [];
+		                     	var idList = [];
+		                     	var dataList = checkStatus.data;
+		                     	//console.log(dataList);
+		                     	$.each(dataList, function(i, data) {
+                            		//console.log(data.id);
+                            	    ids.push(data.id);
+                            		idList.push(data.id+"_"+data.roleStatus+"_"+data.menuRoleId+"_");
+                            	});
+                            	chakAdd(page,ids,idList)
+			             },  100);	
+            			}
+                }
+        
+        // 绑定分页
+        var table_page =  document.getElementsByClassName("layui-table-page")
+                for(var i=0;i<table_page.length;i++){                       
+		              table_page[i].onclick=function(){
+       	 				// 给点击页给值 
+       	 				page = $("#pageId").val();
+       	 				//console.log(page);
+		            	 setTimeout(function() {
+		            		 // 设置选中项
+		            		 chak();
+			             },  100);	
+            			}
+                }
+    	layer.close(loadi);
+		return false;  
+		
+    } 
+    /*用户-停用*/
+    function member_stop(obj,id){
+    	var status = 1;
+    	var statusCS = "";
+    	 if($(obj).attr('title')=='启用'){
+         	status = 2;
+         	statusCS = "";
+         }else{
+        	status = 1;
+        	statusCS = "已停用";
+         }
+        layer.confirm('确认要改为'+statusCS+'吗？Id为:'+id,function(index){
+        	updateStatus(obj,id,status);
+           
+            
+        });
+    }
+    function updateStatus(obj,id,status){
+    	var loadi = layer.load('加载中......');
+    	
+		 //发异步                         
+       var url = "update/UserPassword";  // 修改状态和修改密码是同一路径
+       var data ={
+       		id:id,
+       		status:status
+           }; 
+      
+       $.ajax({
+   		url:url,
+   		data:data,
+   		type:'post',
+   		dataType:'json',
+   		success: function(result){
+   			//console.log(result.code);
+                	layer.close(loadi);
+   			if(result.code==200){  
+   				if($(obj).attr('title')=='启用'){
+   					
+   		              //发异步把用户状态进行更改
+   		              
+   		            	$(obj).attr('title','停用')
+   			            $(obj).find('i').html('&#xe601;');
+
+   			            $(obj).parents("tr").find("#statusUp").find('span').addClass('layui-btn-disabled').html('已停用');
+   			            layer.msg('已停用!',{icon: 5,time:1000});
+   		              
+
+   		            }else{
+   		              $(obj).attr('title','启用')
+   		              $(obj).find('i').html('&#xe62f;');
+
+   		              $(obj).parents("tr").find("#statusUp").find('span').removeClass('layui-btn-disabled').html('已启用');
+   		              layer.msg('已启用!',{icon: 5,time:1000});
+   		            }
+                   return false;
+   			}else{
+   				layer.alert(result.msg, {
+                       icon: 7
+                   });
+   			}
+   			
+   		},
+   		error: function(e){
+   			//alert("通信失败!");
+   		}
+   	});
+       return false;
+	}
+    /*用户-添加*/
+    function member_RoleStatus(obj,id,userRoleId){  // 用id ,权 限组id
+    	var status = 1;
+    	var statusCS = "";
+    	 if($(obj).attr('title')=='已添加'){
+         	status = 2;
+         	statusCS = "取消添加";
+         }else{
+        	status = 1;
+        	statusCS = "已添加";
+         }
+        layer.confirm('确认要'+statusCS+'吗？Id为:'+id,function(index){
+        	updateRoleStatus(obj,id,status,userRoleId,getRoleId());
+           
+            
+        });
+    }
+	function updateRoleStatus(obj,id,status,userRoleId,roleId){
+		var loadi = layer.load('加载中......');
+    	
+		 //发异步                         
+        var url = "add/userRoleInfo";  
+        var data ={
+        		id:id,
+        		status:status,
+        		userRoleId:userRoleId,
+        		roleId:roleId
+            }; 
+       
+        $.ajax({
+    		url:url,
+    		data:data,
+    		type:'post',
+    		dataType:'json',
+    		success: function(result){
+    			console.log(result.code);
+    			if(result.code==200){ 
+                	layer.close(loadi);
+    				if($(obj).attr('title')=='已添加'){
+    					
+    		              //发异步把用户状态进行更改
+    		              
+    		            	$(obj).attr('title','未添加')
+    			            $(obj).find('i').html('');
+
+    			            $(obj).parents("tr").find("#statusUpUser").find('span').addClass('layui-btn-disabled').html('未添加');
+    			            $(obj).parents("tr").find("#statusUpLoginName").find('span').html('');
+    			            layer.msg('未添加!',{icon: 5,time:1000});
+    		                
+
+    		            }else{
+    		              $(obj).attr('title','已添加')
+    		              $(obj).find('i').html('');
+
+    		              $(obj).parents("tr").find("#statusUpUser").find('span').removeClass('layui-btn-disabled').html('已添加');
+    		              $(obj).parents("tr").find("#statusUpLoginName").find('span').html(getRoleName());
+    		              layer.msg('已添加!',{icon: 5,time:1000});
+    		            }
+                    return false;
+    			}else{
+    				layer.alert(result.msg, {
+                        icon: 7
+                    });
+    			}
+    			
+    		},
+    		error: function(e){
+    			//alert("通信失败!");
+    		}
+    	});
+        return false;
+	}
+	
+	// 获取缓存数据
+	function getRoleId(){
+
+		var roleId =0;
+		if(localStorage.getItem("roleId")!=null){	
+			if(getUrlParam("roleId")!=null && getUrlParam("roleId")!=""){
+				localStorage.setItem('roleId',getUrlParam("roleId")); // 存入
+			}
+			 roleId =localStorage.getItem("roleId") // 取出
+        }else{
+        	localStorage.setItem('roleId',getUrlParam("roleId")); // 存入
+        }
+		return roleId;
+	}
+	function getRoleName(){
+		var roleName ="";
+		if(localStorage.getItem("roleName")!=null){
+			if(getUrlParam("roleName")!=null && getUrlParam("roleName")!=""){
+				localStorage.setItem('roleName',getUrlParam("roleName")); // 存入
+			}
+			roleName =localStorage.getItem("roleName") // 取出
+        }else{
+        	localStorage.setItem('roleName',getUrlParam("roleName")); // 存入
+        }
+		return roleName;
+	}
+	 //保存选中值
+    function chakAdd(page,ids,idList){
+    	var curren = page+"-0,";
+    	var currens = page+"-1,";
+    	if(objCheckList.indexOf(curren) != -1){
+    		// 组数据
+    		 var index_1 = objCheckList.indexOf(curren);		
+    		 var index_2 = objCheckList.indexOf(currens) + currens.length;	
+    		 var test = objCheckList.slice(index_1, index_2) //得到已有字段
+    		 //console.log(objCheckList);
+    		 objCheckList = objCheckList.replace(test, ""); //删除己有字段，
+    		 objCheckList = objCheckList +curren+ idList.toString()+","+currens; // 重新添加
+    		 
+    		 //展示Id
+    		
+    		  index_1 = idlength.indexOf(curren);	
+    		  
+    		  index_2 = idlength.indexOf(currens) + currens.length;	
+    		  
+    		  test = idlength.slice(index_1, index_2) //得到已有字段
+    		  
+    		  idlength = idlength.replace(test, ""); //删除己有字段，
+    		  idlength = idlength +curren+ ids.toString()+","+currens; // 重新添加
+
+    	}else{
+    		objCheckList = objCheckList +curren+ idList.toString()+","+currens;
+    		idlength = idlength +curren+ ids.toString()+","+currens;
+    	}
+    	
+    }
+    // 默认选中
+    function chak(){
+    	//获取下面所有的复选框
+        var str = idlength.split(",");
+        //console.log(str);
+        if(idlength!=null && idlength!=""){
+        	
+                //拿到每一个复选框，并将其状态置为选中           	
+                //checkOnes[i].checked=false;
+                for(var a= 0 ;str.length>a;a++){
+           			if(str[a]!=null && str[a]!=""){
+           				
+           				if(str[a].indexOf("-") == -1){
+           				console.log("strId="+str[a]);
+           					var td = $('#LAY_table_user').next().find('.layui-table-box tr td[data-content="'+str[a]+'"]  input');//...
+               			    td.next().click();
+           				}
+           				
+           				
+           			 
+           			}
+                }
+
+        }
+       
+    }
+    </script>
+        
+    <!--  <script>var _hmt = _hmt || []; (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?b393d153aeb26b46e9431fabaf0f6190";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();</script>-->
+
+</html>

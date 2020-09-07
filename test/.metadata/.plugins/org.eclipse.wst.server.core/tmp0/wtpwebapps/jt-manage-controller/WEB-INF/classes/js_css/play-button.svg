@@ -1,0 +1,16 @@
+<svg id="p::play" xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 52 52">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #0094ff;
+      }
+
+      .cls-2 {
+        fill: #fff;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <circle id="矩形_67_拷贝" data-name="矩形 67 拷贝" class="cls-1" cx="26" cy="26" r="26"/>
+  <path id="椭圆_6_拷贝" data-name="椭圆 6 拷贝" class="cls-2" d="M962.645,1332.35L947,1342v-19Z" transform="translate(-927 -1306)"/>
+</svg>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="TaskInfo">
+  <resultMap id="taskInfoResult" type="com.maien.system.pojo.TaskInfo">
+        <result column="TaskId" jdbcType="INTEGER" property="TaskId" />
+        <result column="Title" jdbcType="VARCHAR" property="Title" />
+		<result column="Description" jdbcType="VARCHAR" property="Description" />
+		<result column="TaskDate" jdbcType="INTEGER" property="TaskDate" />
+		<result column="UpdateTime" jdbcType="DATE" property="UpdateTime" />
+		<result column="AddTime" jdbcType="DATE" property="AddTime" />
+		<result column="Status" jdbcType="INTEGER" property="Status" />
+		<result column="AddUserId" jdbcType="INTEGER" property="AddUserId" />
+		<result column="Type" jdbcType="INTEGER" property="Type" />
+    </resultMap>  
+    <insert id="insertTask"  parameterType="com.maien.system.pojo.TaskInfo">
+       	insert into tbl_taskInfo (Type,Title,Description,TaskDate,PicUrls,Reward,RewardVip1,RewardVip2,AddDate,AddTime,Status,AddUserId)
+          values (#{Type},#{Title},#{Description},#{TaskDate},#{PicUrls},#{Reward},#{RewardVip1},#{RewardVip2},#{AddDate},#{AddTime},#{Status},#{AddUserId})
+    </insert>
+   <select id="getTaskCount" parameterType="java.util.Map" resultType="int" >
+		select count(1) 
+		from tbl_taskInfo t 				
+		where 1=1 	
+		<if test="type !=null and type!=''"><![CDATA[  AND   t.type  = #{type}  ]]></if> 
+		<if test="tile !=null and tile!=''"><![CDATA[  AND   t.tile  = #{tile}  ]]></if> 	
+		<if test="like !=null and like!=''"><![CDATA[  AND   t.title  like '%' || #{like} || '%'  ]]></if> 	
+		<if test="status !=null and status!=''"><![CDATA[  AND   t.status  = #{status}  ]]></if> 
+		<if test="userId !=null and userId!=''"><![CDATA[  and t.AddUserId = #{userId}  ]]></if> 					
+	</select>
+	 <select id="findAll" parameterType="java.util.Map" resultMap="taskInfoResult" >
+		select Taskid ,Title,Description,TaskDate,AddTime,UpdateTime,Status,AddUserId,Type,date,RewardVip1,RewardVip2,Reward
+		from tbl_taskInfo t 				
+		where 1=1 	
+		 <if test="type !=null and type!=''">  AND   t.type  = #{type}  </if> 
+		<if test="title !=null and title!=''">  AND   t.title  = #{title}  </if> 	
+		<if test="like !=null and like!=''">  AND   t.title  like '%' || #{like} || '%'  </if> 		
+		<if test="status !=null and status!=''">  AND   t.status  = #{status} </if> 
+		<if test="userId !=null and userId!=''"> and t.AddUserId = #{userId}  </if>
+		<if test="taskId !=null and taskId!=''">  and t.Taskid = #{taskId}  </if>
+		order by  
+             t.AddDate desc	
+        <if test="page !=null and page!='' and size !=null and size!=''"><![CDATA[  limit #{page},#{size}  ]]></if>	
+					
+	</select>   
+</mapper>	
+
+
+
+
+
+
+
+
+
+
+
+
+

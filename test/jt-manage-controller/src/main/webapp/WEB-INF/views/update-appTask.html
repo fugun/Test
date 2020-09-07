@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+   <meta charset="UTF-8">
+    <title>欢迎页面-X-admin</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <!--  <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="stylesheet" href="../css/font.css">
+    <link rel="stylesheet" href="../css/xadmin.css">
+    <script src="../lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../js/xadmin.js"></script>  -->      
+    <link href="../res/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../res/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../res/assets/bootstrap-toggle-buttons/static/stylesheets/bootstrap-toggle-buttons.css" />
+    <link href="../res/css/style.css" rel="stylesheet" />
+    <link href="../res/css/chosen.css" rel="stylesheet" />
+    <script type="text/javascript" src="../res/js/updateimg.js" ></script>
+    <script src="../res/js/laydateS/laydate.js"></script>
+    <link href="../res/css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="../res/css/glightbox.css">
+</head>
+<style type="text/css">
+		
+		#showui li{
+			text-decoration: none;
+			list-style: none;
+			display: inline;
+			
+		}
+		#showuis li{
+			text-decoration: none;
+			list-style: none;
+			display: inline;
+			
+		}
+		#showinput li{
+			text-decoration: none;
+			list-style: none;
+			display: inline;
+			
+		}
+		#dc {position:absolute;z-index:999}
+	</style>
+	<style type="text/css">
+          
+           #showinputs li img{
+                width: 50%;
+                cursor: pointer;
+                transition: all 0.6s;图片放大过程的时间
+            }
+            /* #showinputs li img:hover{
+              transform: scale(2);鼠标经过图片放大的倍数
+                
+            }*/
+			
+        </style> 
+<body >
+    <div >            
+        <div >
+            <div id="div2"  class="divContent">            
+                <div >
+                        <div class="widget-body">                    
+                            <div class="tongdao" >
+                                <div class="row-fluid" >
+                                    <div class="form-actions actionsbao" style = "margin-top:-15px;">                                
+		                            	<label class="btn" style ="background:#FFFFFF;">任务标题：</label>	
+		                            	<textarea id="name" multiple="multiple" class="wenbxa" style="width:300px;height:30px;"></textarea>															
+                           			</div>                                                                                              
+                                    <div class="row-fluid" style=" margin-top:-30px;" >
+                                   		<div class="span6">
+                                            <div class="control-group">
+                                            	<label class="sp-labe2" style="width:50%;"></label>
+                                                <label class="sp-labe1" style = "font-size:14px">&nbsp;&nbsp;&nbsp;任务佣金：&nbsp;</label>
+
+                                                <div class="controls controlsw" >
+                                                    <input id="bonus" type="text" class="spann6 " style="width:100px;" readonly="readonly"/><span style= "color:red">&nbsp;&nbsp;&nbsp;元</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                       <div class="span6" >
+                                         <div id = "dc">
+                                         
+                                        	<label class="sp-labe2" style="width:40px;"></label>
+                                            <label class="sp-label">任务类型：</label>
+                                            <div class="controls sp-xiala"  >
+                                                <select class="span6 chzn-select" style="width:120px;" id="type" data-placeholder="" tabindex="1">
+                                                    <option value="1">通用</option>                                                     
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                    </div> 
+                              </div>                            
+                            </div>
+                            <div class="form-actions actionsbao" style = "margin-top:10px;">
+                                <label class="btn" style ="background:#FFFFFF;">任务图片：</label>	
+                            	<div class="upimg">
+										<input type="file" id="upgteimg" value="" multiple/>										
+										<button class="btn yans1" id="submit" style ="background:#4A4A4A;">开始上传</button>
+										<button  id = "end" class="btn yans1" style ="background:#4A4A4A;" >清除图片</button>
+										<label class="btn" style ="background:#FFFFFF;color:red">图片大小不能大于300kb</label>
+								</div>
+								<input type="hidden" id="img_url" name="img" value=""/>
+                           	   
+									<ul id="showui">
+									</ul>
+									
+									<div id="showinput">
+										<ul id="showinputs">
+									</ul>																		
+								    </div>																
+                            </div>
+                             <div class="form-actions actionsbao">
+                                <label class="btn" style ="background:#FFFFFF;">内容：</label>
+                                <div class="upimg" id = "operatingSteps" style="display:none">                              	
+										<span  class="btn btncha" type="button" style='height:10px;width:50px' onclick="add('operatingSteps1')"><i class="icon-plus" ></i></span>											
+								</div>	
+                            	<div class="upimg" id = "operatingSteps1">  
+                            			                       											
+                                        <textarea id="Steps1" multiple="multiple" class="wenbxa" style="width:400px;height:20px;"></textarea>                                              										
+										<span>&nbsp;&nbsp;&nbsp;</span>
+										<span  class="btn btncha" type="button" style='height:10px;width:50px' onclick="add1('operatingSteps2')"><i class="icon-plus" ></i></span>
+										<span>&nbsp;&nbsp;&nbsp;</span>
+										<span  class="btn btncha" type="button" style='height:10px;width:50px' onclick="delete1('operatingSteps1')"><i class="icon-minus" ></i></span> 
+																	
+								</div>
+
+								<div class="upimg" style="display:none" id = "operatingSteps2">                          	
+										 <textarea id="Steps2" multiple="multiple" class="wenbxa" style="width:400px;height:20px;"></textarea>
+										
+										<span>&nbsp;&nbsp;&nbsp;</span>
+										<span  class="btn btncha" type="button" style='height:10px;width:50px' onclick="add2('operatingSteps3')"><i class="icon-plus" ></i></span>
+										<span>&nbsp;&nbsp;&nbsp;</span>
+										<span  class="btn btncha" type="button" style='height:10px;width:50px' onclick="delete2('operatingSteps2')"><i class="icon-minus" ></i></span> 
+											 						
+								</div>
+
+								<div class="upimg" style="display:none" id = "operatingSteps3">                          	
+										 <textarea id="Steps3" multiple="multiple" class="wenbxa" style="width:400px;height:20px;"></textarea>
+										<span>&nbsp;&nbsp;&nbsp;</span>
+										<span  class="btn btncha" type="button" style='height:10px;width:50px' onclick="add3('operatingSteps4')"><i class="icon-plus" ></i></span>
+										<span>&nbsp;&nbsp;&nbsp;</span>
+										<span  class="btn btncha" type="button" style='height:10px;width:50px' onclick="delete3('operatingSteps3')"><i class="icon-minus" ></i></span> 
+														
+								</div>
+
+								<div class="upimg" style="display:none" id = "operatingSteps4">                          	
+										 <textarea id="Steps4" multiple="multiple" class="wenbxa" style="width:400px;height:20px;"></textarea>
+										
+										<span>&nbsp;&nbsp;&nbsp;</span>
+										<span  class="btn btncha" type="button" style='height:10px;width:50px' onclick="add4('operatingSteps5')"><i class="icon-plus" ></i></span>
+										<span>&nbsp;&nbsp;&nbsp;</span>
+										<span  class="btn btncha" type="button" style='height:10px;width:50px' onclick="delete4('operatingSteps4')"><i class="icon-minus" ></i></span> 
+																
+								</div>
+
+								<div class="upimg" style="display:none" id = "operatingSteps5">                          	
+										 <textarea id="Steps5" multiple="multiple" class="wenbxa" style="width:400px;height:20px;"></textarea>
+										
+										<span>&nbsp;&nbsp;&nbsp;</span>
+										<span  class="btn btncha" type="button" style='height:10px;width:50px' onclick="add5('operatingSteps6')"><i class="icon-plus" ></i></span>
+										<span>&nbsp;&nbsp;&nbsp;</span>
+										<span  class="btn btncha" type="button" style='height:10px;width:50px' onclick="delete5('operatingSteps5')"><i class="icon-minus" ></i></span> 
+											 						
+								</div>	
+																	
+                            <div class="upimg" id = "operatingSteps6" style="display:none">  
+                            			                       											
+                                        <textarea id="Steps6" multiple="multiple" class="wenbxa" style="width:400px;height:20px;"></textarea>                                              
+										
+										<span>&nbsp;&nbsp;&nbsp;</span>
+										<span  class="btn btncha" type="button" style='height:10px;width:50px' onclick="add6('operatingSteps7')"><i class="icon-plus" ></i></span>
+										<span>&nbsp;&nbsp;&nbsp;</span>
+										<span  class="btn btncha" type="button" style='height:10px;width:50px' onclick="delete6('operatingSteps6')"><i class="icon-minus" ></i></span> 
+																
+								</div>
+
+								<div class="upimg" style="display:none" id = "operatingSteps7">                          	
+										 <textarea id="Steps7" multiple="multiple" class="wenbxa" style="width:400px;height:20px;"></textarea>
+										
+										<span>&nbsp;&nbsp;&nbsp;</span>
+										<span  class="btn btncha" type="button" style='height:10px;width:50px' onclick="add7('operatingSteps8')"><i class="icon-plus" ></i></span>
+										<span>&nbsp;&nbsp;&nbsp;</span>
+										<span  class="btn btncha" type="button" style='height:10px;width:50px' onclick="delete7('operatingSteps7')"><i class="icon-minus" ></i></span> 
+											 					
+								</div>
+
+								<div class="upimg" style="display:none" id = "operatingSteps8">                          	
+										 <textarea id="Steps8" multiple="multiple" class="wenbxa" style="width:400px;height:20px;"></textarea>
+										
+										<span>&nbsp;&nbsp;&nbsp;</span>
+										<span  class="btn btncha" type="button" style='height:10px;width:50px' onclick="add8('operatingSteps9')"><i class="icon-plus" ></i></span>
+										<span>&nbsp;&nbsp;&nbsp;</span>
+										<span  class="btn btncha" type="button" style='height:10px;width:50px' onclick="delete8('operatingSteps8')"><i class="icon-minus" ></i></span> 
+																	
+								</div>
+
+								<div class="upimg" style="display:none" id = "operatingSteps9">                          	
+										<textarea id="Steps9" multiple="multiple" class="wenbxa" style="width:400px;height:20px;"></textarea>
+										<span>&nbsp;&nbsp;&nbsp;</span>
+										<span  class="btn btncha" type="button" style='height:10px;width:50px' onclick="add9('operatingSteps10')"><i class="icon-plus" ></i></span>
+										<span>&nbsp;&nbsp;&nbsp;</span>
+										<span  class="btn btncha" type="button" style='height:10px;width:50px' onclick="delete9('operatingSteps9')"><i class="icon-minus" ></i></span> 
+															
+								</div>
+								<div class="upimg" style="display:none" id = "operatingSteps10">                          	
+										 <textarea id="Steps10" multiple="multiple" class="wenbxa" style="width:400px;height:20px;"></textarea>
+										
+										<span>&nbsp;&nbsp;&nbsp;</span>
+										<span  class="btn btncha" type="button" style='height:10px;width:50px' onclick="add10('operatingSteps10')"><i class="icon-plus" ></i></span>
+										<span>&nbsp;&nbsp;&nbsp;</span>
+										<span  class="btn btncha" type="button" style='height:10px;width:50px' onclick="delete10('operatingSteps10')"><i class="icon-minus" ></i></span> 
+																
+								</div>	
+																	
+                            </div>
+                            <div class="form-actions actionsbao">                                
+                            	<label class="btn" style ="background:#FFFFFF;">任务网址：</label>	
+                            	<textarea id="webUrl" multiple="multiple" class="wenbxa" style="width:300px;height:20px;"></textarea>															
+                            </div>
+                             <div class="form-actions actionsbao">                                
+                            	<label class="btn" style ="background:#FFFFFF;">任务说明：</label>	
+                            	<textarea id="des" multiple="multiple" class="wenbxa" style="width:300px;height:50px;"></textarea>															
+                            </div>
+                            <div class="form-actions actionsbao">
+                                <button type="submit" onclick="saveEdit()" class="btn yans1" style ="background:#4A4A4A;">保存</button>
+                                <button type="button" class="btn" id = 'end' onclick="emptyEdit()">取消</button>
+                            </div>
+                           
+                        </div>
+                    </div>
+               
+            </div>
+        </div>
+       
+       </div>
+    </div>
+    <script src="../res/js/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="../res/js/jquery.nicescroll.js"></script> 
+    <script type="text/javascript" src="../res/js/chosen.jquery.min.js"></script>
+    <script type="text/javascript" src="../res/assets/bootstrap-toggle-buttons/static/js/jquery.toggle.buttons.js"></script>
+    <script src="../res/js/common-scripts.js"></script>
+    <script src="../res/js/form-component.js"></script>
+    <script src="../res/js/layer.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../res/js/operatingStepsImg.js" ></script>
+    <script>
+        //lay('#version').html('-v'+ laydate.v);
+
+     
+        laydate.render({
+   		 elem: '#date'
+   		 
+  		});
+        
+        </script>
+    <script language="javascript" type="text/javascript">
+    $(document).ready(function() {
+    	var id = getUrlParam("id"); 
+    	
+    	findAppTask(id) ;
+		
+    });	
+    function findAppTask(id) {
+    	var loadi = layer.load('加载中......');
+    	
+        var url = "find/appTaskId";
+        //console.log(id);
+        $.post(
+            url, {
+                id: id
+            },
+            function(data) {            	
+                var tasks = data.data;
+                $.each(tasks, function(i, task) {
+                	
+                	layer.close(loadi);
+                	if(data.code==0){
+                		 $("#name").val(task.name);
+                         $("#type").val(task.type);
+                         $("#des").val(task.des);
+                         $("#img_url").val(task.imgUrl);
+                         $("#bonus").val(task.bonus);
+                         $("#webUrl").val(task.webUrl);
+                      
+                        //var jsonObj =  JSON.parse(task.PicUrls);//转换为json对象
+                        if(task.imgUrl!=null && task.imgUrl!=""){
+                        	 var tbodyHtml = "";
+                             //for(var i=0;i<jsonObj.length;i++){
+                                     //alert(jsonObj[i].pic);  //取json中的值
+                             	 tbodyHtml = tbodyHtml + "<li>"; 
+                             	 //tbodyHtml = tbodyHtml + " <img src=http://47.107.52.22" + task.imgUrl+ " width=\"100px\"/>";
+                             	 tbodyHtml = tbodyHtml + " <img src=http://admin.beiyongkj.com" + task.imgUrl+ " width=\"100px\"/>";
+                             	 
+                             	 tbodyHtml = tbodyHtml + "</li>";   
+                             //}
+                             $("#showinputs").html(tbodyHtml);
+                        }
+                        
+                       
+                        
+                        //内容
+                        // var contentsS = task.contents.replace("[","").replace("]","").split(",");
+                         var contentsS =  JSON.parse(task.contents);//转换为json对象
+                         for(var i=0;i<contentsS.length;i++){
+                             if(contentsS[i]!=null ){	                                	
+                            		document.getElementById("operatingSteps"+(i+1)).style.display = "";//显示
+	                                	$("#Steps"+(i+1)).val(contentsS[i].content);
+		                            	$("#showStepsImgs"+(i+1)).html(tbodyHtml);
+                             } 	                            	
+                        }    
+                	}else{
+                		layer.alert("系统错误!请刷新重试或者联系管理员.", 3, !1);
+                	}
+                   
+                });
+            }, "json"
+        );
+    }
+    
+    
+        //取消
+        function emptyEdit(){
+        	
+            $("#Steps1").val("");
+            $("#Steps2").val("");
+            $("#Steps3").val("");
+            $("#Steps4").val("");
+            $("#Steps5").val("");
+            $("#Steps6").val("");
+            $("#Steps7").val("");
+            $("#Steps8").val("");
+            $("#Steps9").val("");
+            $("#Steps10").val("");                 
+        	 $("#name").val("");
+             $("#Type").val("1");
+             $("#des").val("");
+             $("#img_url").val("");
+             $("#bonus").val("");
+             $("#webUrl").val("");
+             
+                         
+             $("#showui").each(function(){//寻找#test下面所有的div
+                 /* var a=$(this).text(); *///获取#test下面每个div的文字
+                 $(this).empty();//清空#test下面所有的内容
+                /*  $(this).text(a); *///把每个div的内容赋给清除内容以后的div */
+                 });
+             $("#upgteimg").val("");
+         
+        }
+       
+        function saveEdit() {
+        	var name = $("#name").val();  // 标题
+            var type = $("#type").val();   //类型
+            var des =  $("#des").val();  // 说明
+            var  imgUrl = $("#img_url").val();  // 图片路径
+            console.log(imgUrl);
+            var bonus = $("#bonus").val();  //佣金
+            var webUrl = $("#webUrl").val(); //外网路径 
+            if (name.length < 1) {
+                layer.alert("请输入标题!\n Error:标题不能为空!", 3, !1);
+                layer.close(sms_load);
+                return false;
+            }                
+           // if (imgUrl.length < 1) {
+            //    layer.alert("请上传任务图片1张!", 3, !1);
+           //     layer.close(sms_load);
+          //      return false;
+           // }  
+            if (bonus.length < 1) {
+                layer.alert("请输入佣金!", 3, !1);
+                layer.close(sms_load);
+                return false;
+            }  
+          //内容
+            var contents = "";
+            if($("#Steps1").val().length>1){
+            	contents  =$("#Steps1").val();
+            }	
+            if($("#Steps2").val().length>1){
+            	contents  =  contents + ","+ $("#Steps2").val();
+            }
+            if($("#Steps3").val().length>1){
+            	contents  =  contents + ","+ $("#Steps3").val();
+            }
+            if($("#Steps4").val().length>1){
+            	contents  =  contents + ","+ $("#Steps4").val();
+            }
+            if($("#Steps5").val().length>1){
+            	contents  =  contents + ","+ $("#Steps5").val();
+            }
+            if($("#Steps6").val().length>1){
+            	contents  =  contents + ","+ $("#Steps6").val();
+            }
+            if($("#Steps7").val().length>1){
+            	contents  =  contents + ","+ $("#Steps7").val();
+            }
+            if($("#Steps8").val().length>1){
+            	contents  =  contents + ","+ $("#Steps8").val();
+            }
+            if($("#Steps9").val().length>1){
+            	contents  =  contents + ","+ $("#Steps9").val();
+            }
+            if($("#Steps10").val().length>1){
+            	contents  =  contents + ","+ $("#Steps10").val();
+            }
+            
+            //console.log(contents);   
+            var loadi = layer.load('加载中......');
+                	
+            var save_task_url = "Tadk/updateTask";
+	        var data ={
+	        		id : getUrlParam("id"),
+	        		name: name,
+                	type: type,
+                	des: des,
+                	imgUrl: imgUrl,
+                	bonus: bonus,
+                	webUrl: webUrl,
+                	contents: contents
+                	
+                	         
+	            };            
+	        $.ajax({
+	    		url:save_task_url,
+	    		data:data,
+	    		type:'post',
+	    		dataType:'json',
+	    		success: function(result){
+	    			
+                	layer.close(loadi);
+	    			if(result.code == 200){
+	    				layer.alert("修改任务成功!", 1, !1);
+                        emptyEdit(); 
+                        // 获得frame索引
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.location.reload(); //刷新父页面
+                        //关闭当前frame
+                        parent.layer.close(index);
+	    			}else{
+	    				layer.alert("发生错误!请重试或联系管理员.", 3, !1);
+	    			}
+	    			
+	    		},
+	    		error: function(e){
+	    			//alert("通信失败!");
+	    			
+	    		}
+	        });
+        }
+
+        function getLocalTime(date) {     
+        	var date = new Date(date);
+        	Y = date.getFullYear() + '-';
+        	M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+        	D = date.getDate() + ' ';
+        	 h = date.getHours() + ':';
+        	m = date.getMinutes() + ':';
+        	s = date.getSeconds();  
+        	return(Y+M+D+h+m+s);     
+        	}
+        function getLocalTimes(date) {     
+        	var date = new Date(date);
+        	Y = date.getFullYear() + '-';
+        	M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+        	D = date.getDate() + '';        	
+        	return(Y+M+D);     
+        	}
+        //function hiddenWidget(part) {
+            //var el = part.find(".widget-body");
+           /// el.hide();
+       // }
+       // function showWidget(part) {
+       //     var el = part.find(".widget-body");
+          //  el.show();
+        //}
+        //从路径中获取参数
+
+		function getUrlParam(name) {
+		    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+		    var r = window.location.search.substr(1).match(reg); //匹配目标参数
+		    if (r != null) return decodeURIComponent(escape(unescape(r[2]))); return null; //返回参数值           
+		}       
+    </script>
+</body>
+
+</html>
