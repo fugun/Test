@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<!-- saved from url=(0035)https://www.fancynode.com.cn/flavor -->
+<html xmlns:wb="http://open.weibo.com/wb"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>Beiyong官网</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=no">
+
+<link rel="icon" type="image/x-icon" href="http://admin.beiyongkj.com/beiYong/by.ico">
+
+<link rel="stylesheet" type="text/css" href="../js_css/fancynode.css">
+<script src="../js_css/jquery-latest.min.js.下载"></script>
+<script src="../js_css/createjs-2015.11.26.min.js.下载"></script>
+<script charset="UTF-8" src="../js_css/query"></script></head>
+<script src="../js_css/jquery-latest.min.js.下载"></script>
+<script src="../js_css/createjs-2015.11.26.min.js.下载"></script>
+<script type="text/javascript" src="../js_css/pxcook_plans.js.下载" imagepath="https://web-assets.fancynode.com.cn/web_v1/" uid="" email="" downloadurl="https://assets.fancynode.com.cn/pxcook/client/PxCook_v3.9.940_build_201911131134.air" downloadurlmac="https://assets.fancynode.com.cn/pxcook/client/mac/PxCook_v3.9.940_build_201911131134.dmg" downloadurlwin64="https://assets.fancynode.com.cn/pxcook/client/win64/PxCook_v3.9.940_build_201911131134_x64.exe" downloadurlwin32="https://assets.fancynode.com.cn/pxcook/client/win32/PxCook_v3.9.940_build_201911131134_x86.exe"></script>
+<script type="text/javascript" src="../js_css/pxcook_docs.js.下载" imagepath="https://web-assets.fancynode.com.cn/web_v1/"></script>
+
+<script charset="UTF-8" src="../js_css/query"></script></head>
+
+
+<body>
+
+
+    <script>
+    var IMAGE_BASE = "https://web-assets.fancynode.com.cn/web_v1/";
+    var EMAIL= "";
+</script>
+
+<script>
+	function jumpToSignup(){
+		var redirectUrl = '';
+		var reg = new RegExp("(^|&)redirectUrl=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(reg);
+		if (r) {
+			redirectUrl = unescape(r[2]);
+		}
+		if(!redirectUrl){
+			redirectUrl = window.location.href
+		}
+		var targetSignupUrl = '/guest/signup'
+		if(redirectUrl.indexOf('signup') == -1 && redirectUrl.indexOf('signin') == -1){
+			targetSignupUrl += "?redirectUrl=" +redirectUrl;
+		}
+		window.location.href = targetSignupUrl;
+	}
+</script>
+
+<script>
+    var NavbarFloat = (function () {
+        function NavbarFloat() {
+            var self = this;
+            this.itemList = {};
+            $(window).load(function() {
+                self._initAppMenu();
+                setTimeout(function() {
+                    self.navbarImpl.addClass("display");
+                }, 100);
+            });
+        }
+        NavbarFloat.prototype._initAppMenu = function () {
+            this._registerItem(//pxcook
+                "https://web-assets.fancynode.com.cn/web_v1/images/fancynode/header/icon_pxcook.png",
+                "https://web-assets.fancynode.com.cn/web_v1/images/fancynode/header/icon_pxcook@2x.png 2x",
+                "PxCook","设计研发协作平台","/pxcook","#1ea6fc","pxcook",true);
+            this._registerItem(//bigshear
+                "https://web-assets.fancynode.com.cn/web_v1/images/fancynode/header/icon_bigshear.png",
+                "https://web-assets.fancynode.com.cn/web_v1/images/fancynode/header/icon_bigshear@2x.png 2x",
+                "BigShear","游戏图片分割，合并利器","/bigshear","#49d0ea","bigshear",true);
+            this._registerItem(//colorcube
+                "https://web-assets.fancynode.com.cn/web_v1/images/fancynode/header/icon_colorcube.png",
+                "https://web-assets.fancynode.com.cn/web_v1/images/fancynode/header/icon_colorcube@2x.png 2x",
+                "ColorCube","配色神器","/colorcube","#ff8948","colorcube",true);
+            this._registerItem(//sweet_onion
+                "https://web-assets.fancynode.com.cn/web_v1/images/fancynode/header/icon_sweet_onion.svg",null,
+                "甜葱填图","高效批量图片填充-Ps插件","/sweet_onion","#7737e7","sweet_onion",false);
+            this._registerItem(//flavor
+                "https://web-assets.fancynode.com.cn/web_v1/images/fancynode/header/icon_flavor.svg",null,
+                "Flavor","给你的设计加点料-Sketch插件","/flavor","#1ea6fc","flavor",false);
+
+        }
+        NavbarFloat.prototype._registerItem = function (icon,iconRetina,title,des,link,color,type,isApp) {
+            var container = null;
+            if(isApp){
+                container = $(".navbar-float .app-list-container.app");
+            }else{
+                container = $(".navbar-float .app-list-container.plugin");
+            }
+            var item =
+            "<li>"+
+            "   <a href=\""+link+"\">";
+            if(iconRetina){
+                item +=
+                "   <img class=\"icon\" src=\""+icon+"\" srcset=\""+iconRetina+"\"/>";
+            }else{
+                item +=
+                "   <img class=\"icon\" src=\""+icon+"\" />";
+            }
+            item +=
+            "       <div class=\"menu-text-container\">"+
+            "           <span class=\"title\">"+title+"</span>"+
+            "           <span class=\"des\">"+des+"</span>"+
+            "       </div>"+
+            "   </a>"+
+            "</li>";
+            var itemImpl = $(item).appendTo(container);
+
+            this.itemList[type] = {
+                "item":itemImpl,
+                "color":color
+            }
+        }
+
+        NavbarFloat.prototype._scroll_handler = function () {
+            if(this.stillInContainer){
+                this.navbarImpl.addClass("float");
+                this.icon.attr("src",this.titleIconColor);
+                this.title.css("color",this.titleColor);
+                return;
+            }
+            var headerHeight = this.headerContainer.outerHeight();
+
+            var type = "";
+            if ($(window).scrollTop() <= headerHeight) {
+                type = "header";
+			} else {
+                type = "container";
+			}
+            if(type != this.typeCache){
+                this.typeCache = type;
+                if(type == "header"){
+                    this.navbarImpl.removeClass("float");
+                    this.icon.attr("src",this.titleIcon);
+                    this.title.css("color","inherit");
+                }else{
+                    this.navbarImpl.addClass("float");
+                    this.icon.attr("src",this.titleIconColor);
+                    this.title.css("color",this.titleColor);
+                }
+            }
+        }
+        NavbarFloat.prototype._resize_handler = function () {
+            var containerWidth = this.navbarContainer.width();
+            if(this.titleContainer.outerWidth(true)+this.itemContainer.outerWidth(true)+this.loginContainer.outerWidth(true)+30 >= containerWidth){
+                this.itemContainer.fadeOut(100);
+            }else{
+                this.itemContainer.fadeIn(100);
+            }
+        }
+        NavbarFloat.prototype.init = function (titleIcon,titleIconColor,title,titleColor,buttonClass,link,stillInContainer) {
+            var self = this;
+            $(window).load(function() {
+                self.navbarImpl = $(".navbar-float");
+
+                self.navbarContainer = $(".navbar-float .container");
+                self.titleContainer = $(".navbar-float .zc-navbar-head");
+                self.itemContainer = $(".navbar-float .navbar-item-list");
+                self.loginContainer = $(".navbar-float .right-part");
+
+
+                self.icon = $(".navbar-float .container .title-container .title-icon");
+                self.title = $(".navbar-float .container .title-container .title");
+
+                self.titleIcon = titleIcon;
+                self.titleIconColor = titleIconColor;
+                self.titleColor = titleColor;
+
+                self.title.text(title);
+                self.icon.attr("src",titleIcon);
+
+                var type = "flavor"
+                var activeItem = self.itemList[type];
+                var itemColor = activeItem["color"];
+                activeItem["item"].addClass("active");
+                activeItem["item"].css("background-image","linear-gradient("+itemColor+","+itemColor+")");
+
+                $(".navbar-float .container .title-container").attr("href",link);
+
+				self.stillInContainer = stillInContainer;
+				$(".navbar-float .signup").addClass(buttonClass)
+            });
+        }
+
+        NavbarFloat.prototype.addNavbarItem = function (domStr,callBack) {
+            $(window).load(function() {
+                var item = $("<a class=\"navbar-item\">"+domStr+"</a>").appendTo($(".navbar-float .navbar-item-list"));
+                if(callBack){
+                    item.on("click",callBack);
+                }
+            });
+        }
+        NavbarFloat.prototype.setHeader = function (header) {
+            var self = this;
+            $(window).load(function() {
+                self.headerContainer = $(header);
+                self._scroll_handler();
+                self._resize_handler();
+                $(window).scroll(function () {
+                    self._scroll_handler();
+                });
+                $(window).resize(function() {
+                    self._resize_handler();
+                });
+            });
+        }
+        return NavbarFloat;
+    }());
+    var navbar = new NavbarFloat();
+</script>
+<div class="zc-navbar g-navbar-common g-navbar-pxcook">
+    
+    
+    <div class="container">
+        <div class="zc-navbar-head zc-navbar-nav">
+            <li data-role="dropdown-hover" class="dropdown dropdown-switch">
+                                <a data-role="dropdown-toggle" href="" class="dropdown-toggle pxcook">
+                    <img src="../js_css/1.png">
+                    <img class="arrow" src="../js_css/arrow.svg">
+                </a>
+                                <ul data-role="dropdown-menu" class="dropdown-menu">
+                    <div class="transparent"></div>
+                    <div class="context-container">
+                        <div class="app-title-container"><img src="../js_css/app_icon.svg"><span>合作媒体</span></div>
+                        <div class="app-list-container">
+                            <li class="link-pxcook active">
+                                <a href="https://www.douyin.com">
+                                    <img class="icon" src="../js_css/icon_bigshear.png" srcset="https://web-assets.fancynode.com.cn/web_v1/images/fancynode/header/icon_pxcook@2x.png 2x">
+                                    <div class="menu-text-container">
+                                        <span class="title">抖音</span>
+                                        <span class="des">协作平台</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="link-bigshear ">
+                                <a href="https://www.toutiao.com">
+                                    <img class="icon" src="../js_css/icon_colorcube.png" srcset="https://web-assets.fancynode.com.cn/web_v1/images/fancynode/header/icon_bigshear@2x.png 2x">
+                                    <div class="menu-text-container">
+                                        <span class="title">头条</span>
+                                        <span class="des">协作平台</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="link-colorcube ">
+                                <a href="http://www.xiangkannews.cn">
+                                    <img class="icon" src="../js_css/icon_pxcook.png" srcset="https://web-assets.fancynode.com.cn/web_v1/images/fancynode/header/icon_colorcube@2x.png 2x">
+                                    <div class="menu-text-container">
+                                        <span class="title">想看</span>
+                                        <span class="des">协作平台</span>
+                                    </div>
+                                </a>
+                            </li>
+                        </div>
+                       
+                        <div class="gap-line"></div>
+                        <div class="back-home">
+                            <a href="">
+                                <img src="../js_css/back-home-icon.svg">
+                                <span>首页</span>
+                            </a>
+                        </div>
+                    </div>
+                </ul>
+
+
+            </li>
+        </div>
+
+        <div class="zc-navbar-collapse clearfix">
+                
+            			            <ul class="zc-navbar-nav zc-navbar-left">
+                                                            <li class="item">
+                           <a href="../user/indexk" class="link active">产品说明</a>
+                        </li>
+                    
+                                             <li class="item">
+                            <a href="../user/indexc" class="link ">协作方案</a>
+                        </li>
+                    
+                    
+                    <li class="item">
+                        <a href="../user/indexa" class="link">版本日志</a>
+					</li>
+		
+                            </ul>
+        </div>
+    </div>
+</div>	
+
+    
+<div id="page-product-price" class="page-product-price pxcook">
+    <div class="price-part">
+		
+		<div style="margin:15px;"></div>
+		<div  align="center" >
+		
+				 <img class="icon" src="../test3Image/1.png" style ="width: 80%; height: 80%;">
+				 <img class="icon" src="../test3Image/2.png" style ="width: 80%; height: 80%;">
+				 <img class="icon" src="../test3Image/3.png" style ="width: 80%; height: 80%;">
+				 <img class="icon" src="../test3Image/4.png" style ="width: 80%; height: 80%;">
+				 <img class="icon" src="../test3Image/5.png" style ="width: 80%; height: 80%;">
+				 <img class="icon" src="../test3Image/6.png" style ="width: 80%; height: 80%;">
+				 <img class="icon" src="../test3Image/7.png" style ="width: 80%; height: 80%;">
+				 <img class="icon" src="../test3Image/8.png" style ="width: 80%; height: 80%;">
+				 <img class="icon" src="../test3Image/9.png" style ="width: 80%; height: 80%;">
+				 <img class="icon" src="../test3Image/10.png" style ="width: 80%; height: 80%;">
+				 <img class="icon" src="../test3Image/11.png" style ="width: 80%; height: 80%;">
+				
+				</div>
+		<div style="margin:15px;"></div>
+		
+	<script>renderPlans();</script>
+	
+	
+
+	<div class='bubble-layer'>
+	</div>
+</div><div class="g-footer">
+<script>
+    var qqshow = false;
+</script>
+    
+    <div class="bottom-container">
+        <div class="copyright">
+            <div class="detail">© 2019 FancyNode. All rights reserved</div>
+			<div class="icp">京ICP备14038488号</div>
+			<div class="privacy"><a href="/privacy">隐私条款</a></div>
+			<div class="terms"><a href="/terms">使用条款</a></div>
+        </div>
+        
+    </div>
+</div>
+    <!--[if IE 6]>
+        <script type="text/javascript" src="https://web-assets.fancynode.com.cn/web_v1/js/public/vendor/pngfix/v1/png.js"></script>
+        <script type="text/javascript">
+            DD_belatedPNG.fix('.png-ie6');
+        </script>
+    <![endif]-->
+
+   
+</div></body>
+</html>

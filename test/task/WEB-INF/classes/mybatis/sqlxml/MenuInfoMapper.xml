@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="MenuInfo">
+    <resultMap id="menuInfoResult" type="com.maien.system.manager.menu.model.MenuInfo">
+        <result column="MENUID" jdbcType="INTEGER" property="menuId" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="pId" jdbcType="INTEGER" property="pId" />
+		<result column="url" jdbcType="VARCHAR" property="url" />
+		<result column="target" jdbcType="VARCHAR" property="target" />
+		<result column="sort" jdbcType="INTEGER" property="sort" />
+		<result column="checked" jdbcType="INTEGER" property="checked" />
+    </resultMap>
+
+  
+    <select id="queryID" parameterType="com.maien.system.manager.user.model.UserInfo" resultMap="menuInfoResult">
+       SELECT MENUID,NAME,TARGET,url,PID,SORT,CHECKED 
+       	FROM tbl_manage_menu_info WHERE MENUID IN( 
+       			SELECT permission_id FROM tbl_role_permission WHERE role_id IN (
+       			      SELECT MENUID FROM tbl_manage_right_info WHERE userID=1 ) ) ORDER BY MENUID ASC
+    </select>
+   
+</mapper>	

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd  
+        http://www.springframework.org/schema/task   
+        http://www.springframework.org/schema/task/spring-task-4.0.xsd   
+        http://www.springframework.org/schema/context  
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	
+	<!-- <task:annotation-driven />
+	
+	注意：这里work方法上没有@Scheduled注解了-->
+	   <!-- 商户统计 
+	   <bean id="GetTaskJobMhtotaldata" class="com.spring.quartzite.GetTaskJobMhtotaldata"></bean> 
+	 	<task:scheduled-tasks>
+		<task:scheduled ref="GetTaskJobMhtotaldata" method="work" cron="0 0/1 * * * ?" />   
+	   </task:scheduled-tasks>-->
+	   <!-- 商户统计校验
+	   
+	   <bean id="GetTaskJobMhtotaldataCheck" class="com.spring.quartzite.GetTaskJobMhtotaldataCheck"></bean> 
+	 	<task:scheduled-tasks>
+		<task:scheduled ref="GetTaskJobMhtotaldataCheck" method="work" cron="0 0/1 * * * ? " />   
+	   </task:scheduled-tasks> -->
+	 <!-- 0 0/3 * * * ? 每3分钟执行一次  0 10 8 * * ?  每天八点执行一次 -->
+	 <!-- 总统计
+	 <bean id="GetTaskJobTotaldata" class="com.spring.quartzite.GetTaskJobTotaldata"></bean> 
+	 	<task:scheduled-tasks>
+		<task:scheduled ref="GetTaskJobTotaldata" method="work" cron="0 0/1 * * * ?" />   
+	 </task:scheduled-tasks> -->
+	 
+	  <!-- 总统计校验 
+	   
+	   <bean id="GetTaskJobTotaldataCheck" class="com.spring.quartzite.GetTaskJobTotaldataCheck"></bean> 
+	 	<task:scheduled-tasks>
+		<task:scheduled ref="GetTaskJobTotaldataCheck" method="work" cron="0 0/1 * * * ?" />  
+	   </task:scheduled-tasks> -->
+	 
+	 <!-- 提现统计 
+	   
+	   <bean id="GetTaskJobDataCashrecordCheck" class="com.spring.quartzite.GetTaskJobDataCashrecordCheck"></bean> 
+	 	<task:scheduled-tasks>
+		<task:scheduled ref="GetTaskJobDataCashrecordCheck" method="work" cron="0 0/1 * * * ?" />  
+	   </task:scheduled-tasks> -->
+</beans>

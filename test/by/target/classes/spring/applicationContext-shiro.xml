@@ -1,0 +1,94 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+ 
+	<!-- shiro的核心 所有安全操作都将通过securityManager来处理 -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<!-- 缓存管理器
+		<property name="caches" ref="cacheManagers" /> -->
+		<!-- session模式 native本地 http网络 -->
+		<!-- <property name="sessionMode" value="native" /> -->
+		<!-- realm 获取安全数据（如用户、角色、权限） -->
+		<property name="realm" ref="jdbcRealm" />
+	</bean>
+<bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.MemorySessionDAO"/>
+	<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+		<property name="sessionDAO" ref="sessionDAO"></property>
+	</bean>
+	<!-- 缓存管理器 
+	<bean id="cacheManagers" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+		<property name="cacheManagerConfigFile" value="classpath:spring/ehcache.xml" />
+	</bean>-->
+ 
+	<!-- 查询安全数据（用户，角色，权限等） -->
+	<bean id="jdbcRealm" class="com.shiro.SampleRealm">
+		<!-- 数据源 
+		<property name="dataSource" ref="dataSource"></property>-->
+		<!-- 开启查询权限 
+		<property name="permissionsLookupEnabled" value="true"></property>-->
+		<!-- 授权登录sql
+		<property name="authenticationQuery"
+			value="SELECT su.password FROM sys_user su WHERE su.account = ? and su.is_use =1"></property> -->
+		<!-- 查询角色sql 
+		<property name="userRolesQuery"
+			value="SELECT sr.rkey FROM sys_role sr,sys_user su,sys_user_role sur  WHERE su.user_code = sur.user_code and sur.role_code = sr.rcode  and su.account=?"></property>
+		--><!-- 查询权限sql 
+		<property name="permissionsQuery"
+			value="SELECT sp.pkey FROM sys_permission sp ,sys_role sr,sys_role_permission srp WHERE sr.rcode = srp.role_code and sp.pcode = srp.permission_code and sr.rkey=?"></property>
+	--></bean>
+ 
+	<!-- 将shiro bean的生命周期交给spring管理
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" /> -->
+ 
+	<!-- 开启Shiro的注解 
+	<bean
+		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+		depends-on="lifecycleBeanPostProcessor" />-->
+	<bean
+		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager" />
+	</bean>
+ 
+    <!-- 与web.xml中shiro过滤器的名字必须相同-->
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="securityManager" />
+		<property name="loginUrl" value="/user/login" />
+		<property name="successUrl" value="/user/index" />
+		<!-- 未授权跳转地址 -->
+<!-- 		<property name="unauthorizedUrl" value="/s/unauthorized" /> -->
+		<!-- 
+			?   匹配任意一个字符   /login?   /login1  /logina
+			*   匹配任意字符          /login*   /login123 /loginabc123 
+			/** 匹配任意地址          /login/** /login/xxx/xxx/xxx 
+			
+			shiro 过滤器
+				anon  无需授权即可访问
+				authc 必须登录才能访问，不包括记住我登录
+				user  授权即可访问，包括记住我登录
+				logout 退出拦截器 
+		 -->
+		<property name="filterChainDefinitions">
+			<value>
+				/login/**=anon
+				/user/termsOfService**=anon
+				/user/login=anon
+				/user/login/index=anon
+				/css/** = anon
+				/images/** = anon
+				/image/** = anon
+				/file/** = anon
+				/fonts/** = anon
+				/js/**=anon
+				/lib/**=anon
+				/**/*logout*/**=logout
+				/**=user
+			</value>
+		</property>
+	</bean>
+ 
+</beans>
